@@ -1,4 +1,4 @@
-namespace Core.Utility;
+namespace PhysiXSharpe.Core.Utility;
 
 public class Vector
 {
