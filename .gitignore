@@ -1,0 +1,73 @@
+# Ignore Rider project files
+.idea/
+*.sln.iml
+
+# Ignore build and bin/obj directories
+bin/
+obj/
+out/
+
+# Ignore user-specific Rider files
+*.suo
+*.user
+*.userosscache
+*.sln.dotSettings
+*.sln.dotSettings.user
+
+# Ignore Visual Studio files (if applicable)
+.vscode/
+*.vs/
+*.vscode/
+
+# Ignore NuGet packages
+packages/
+*.nupkg
+project.lock.json
+project.assets.json
+NuGet.Config
+global.json
+
+# Ignore temporary and cache files
+*.log
+*.tmp
+*.cache
+*.pid
+*.seed
+*.swp
+Thumbs.db
+.DS_Store
+
+# Ignore Rider workspace files
+.idea/
+.idea_modules/
+.idea/workspace.xml
+.idea/usage.statistics.xml
+.idea/dictionaries/
+.idea/shelf/
+.idea/httpRequests/
+
+# Ignore Rider logs and index
+.idea/.idea
+.idea/modules.xml
+.idea/.rider_history/
+.idea/.rider_local_history/
+.idea/.idea_webServer.xml
+
+# Ignore compiled DLLs and executables
+*.exe
+*.dll
+*.pdb
+*.so
+*.dylib
+
+# Ignore test results
+TestResults/
+coverage/
+coverage.info
+*.coverage
+*.coveragexml
+
+# Ignore deployment artifacts
+.publish/
+*.Publish.xml
+*.Deploy.*
