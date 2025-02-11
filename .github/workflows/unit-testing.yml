@@ -1,0 +1,29 @@
+# This file was made with the assistance of AI tools!
+name: Unit Tests
+
+on:
+  push:
+    branches:
+      - feature #Trigger on feature branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build --no-restore
+
+      - name: Run all tests
+        run: dotnet test --no-build --verbosity normal
