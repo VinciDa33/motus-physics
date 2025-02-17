@@ -1,5 +1,4 @@
 ﻿using PhysiXSharp.Core;
-using PhysiXSharpe.Core.Utility;
 
 namespace TestRunner;
 class Program
