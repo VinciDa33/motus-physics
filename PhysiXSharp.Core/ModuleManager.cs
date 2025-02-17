@@ -18,8 +18,15 @@ internal sealed class ModuleManager
             }
         }
     }
+    
+    private ModuleManager() {}
 
     private readonly List<IPhysiXModule> _physiXModules = new List<IPhysiXModule>();
+
+    public List<IPhysiXModule> GetLoadedModules()
+    {
+        return _physiXModules;
+    }
     
     public void Load(string path)
     {
@@ -31,8 +38,8 @@ internal sealed class ModuleManager
             return;
         }
 
-        string[] moduleFiles = Directory.GetFiles(path, "*.dll");
-
+        string[] moduleFiles = Directory.GetFiles(path, "PhysiXSharp*.dll");
+        
         //Iterate through each file in the modules folder
         foreach (string module in moduleFiles)
         {
@@ -58,13 +65,13 @@ internal sealed class ModuleManager
                     }
 
                     IPhysiXModule moduleInstance = (IPhysiXModule)instance;
-                    
-                    //Run the initialization of the module
-                    moduleInstance.Initialize();
-                    
                     _physiXModules.Add(moduleInstance);
                 }
             }
         }
+
+        //Initialize all modules found
+        foreach (IPhysiXModule module in _physiXModules)
+            module.Initialize();
     }
 }

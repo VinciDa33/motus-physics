@@ -4,7 +4,7 @@ namespace PhysiXSharp.Core;
 
 public static class PhysiX
 {
-    private static string _modulePath = "Modules";
+    private static string _modulePath = ".";
 
     public static PhysiXLogger Logger { get; } = new PhysiXLogger("PhysiX#");
 

@@ -6,6 +6,7 @@
 bin/
 obj/
 out/
+Output/
 
 # Ignore user-specific Rider files
 *.suo
