@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysiXSharp.Core", "PhysiXS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRunner", "TestRunner\TestRunner.csproj", "{F3143BE0-F0CE-4CCF-B6BA-8FFF6DA96164}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysixSharp.Core.Testing", "PhysixSharp.Core.Testing\PhysixSharp.Core.Testing.csproj", "{885A9CFD-AF7D-40DC-886A-E0C11A393DE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysiXSharp.Core.Testing", "PhysiXSharp.Core.Testing\PhysiXSharp.Core.Testing.csproj", "{885A9CFD-AF7D-40DC-886A-E0C11A393DE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

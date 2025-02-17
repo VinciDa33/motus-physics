@@ -1,4 +1,4 @@
-namespace PhysixSharp.Core.Testing;
+namespace PhysiXSharp.Core.Testing;
 
 public class Tests
 {
