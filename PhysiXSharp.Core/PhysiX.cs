@@ -4,15 +4,20 @@ namespace PhysiXSharp.Core;
 
 public static class PhysiX
 {
+    private static bool _isInitialized = false;
     private static string _modulePath = ".";
 
-    public static PhysiXLogger Logger { get; } = new PhysiXLogger("PhysiX#");
+    public static Logger Logger { get; } = new Logger("PhysiX#");
 
     /// <summary>
     /// 
     /// </summary>
     public static void Initialize()
     {
+        if (_isInitialized)
+            return;
+        
+        _isInitialized = true;
         ModuleManager.Instance.Load(_modulePath);
     }
     
