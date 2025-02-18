@@ -8,8 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Reference Include="PhysiXSharp.Core">
+      <Reference Include="PhysiXSharp.Core" Condition="Exists('..\Output\net8.0\PhysiXSharp.Core.dll')">
         <HintPath>..\Output\net8.0\PhysiXSharp.Core.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="PhysiXSharp.Core" Condition="Exists('..\..\..\Output\net8.0\PhysiXSharp.Core.dll')">
+        <HintPath>..\..\..\Output\net8.0\PhysiXSharp.Core.dll</HintPath>
       </Reference>
     </ItemGroup>
 
