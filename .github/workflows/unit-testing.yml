@@ -38,6 +38,9 @@ jobs:
       - name: Build Core
         run: dotnet build ./PhysiXSharp.Core/PhysiXSharp.Core.csproj --configuration Release
 
+      - name: debugging
+        run: ls -la
+
       - name: Build solution
         run: dotnet build --no-restore
 
