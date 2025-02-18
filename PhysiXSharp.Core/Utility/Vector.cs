@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 
 namespace PhysiXSharpe.Core.Utility;
 
@@ -21,6 +22,9 @@ public class Vector
     public static Vector operator *(Vector v1, double d) => new Vector(v1.x * d, v1.y * d);
     public static Vector operator /(Vector v1, double d) => new Vector(v1.x / d, v1.y / d);
 
+    public static Boolean operator ==(Vector v1, Vector v2) => v1.x == v2.x && v1.y == v2.y;
+    public static Boolean operator !=(Vector v1, Vector v2) => v1.x != v2.x || v1.y != v2.y;
+    
     public double Magnitude() {
         return Math.Sqrt(x * x + y * y);
     }
