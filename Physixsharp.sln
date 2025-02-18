@@ -2,9 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysiXSharp.Core", "PhysiXSharp.Core\PhysiXSharp.Core.csproj", "{819BD544-6DFC-4D4E-8EB7-70E889FEA7DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRunner", "TestRunner\TestRunner.csproj", "{F3143BE0-F0CE-4CCF-B6BA-8FFF6DA96164}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysiXSharp.Core.Testing", "PhysiXSharp.Core.Testing\PhysiXSharp.Core.Testing.csproj", "{885A9CFD-AF7D-40DC-886A-E0C11A393DE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysixSharp.Core.Testing", "PhysixSharp.Core.Testing\PhysixSharp.Core.Testing.csproj", "{885A9CFD-AF7D-40DC-886A-E0C11A393DE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhysiXSharp.Raycasting", "PhysiXSharp.Raycasting\PhysiXSharp.Raycasting.csproj", "{37E126B5-0E45-4A2C-9024-F0C64DDCFBE7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,13 +16,13 @@ Global
 		{819BD544-6DFC-4D4E-8EB7-70E889FEA7DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{819BD544-6DFC-4D4E-8EB7-70E889FEA7DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{819BD544-6DFC-4D4E-8EB7-70E889FEA7DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F3143BE0-F0CE-4CCF-B6BA-8FFF6DA96164}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F3143BE0-F0CE-4CCF-B6BA-8FFF6DA96164}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F3143BE0-F0CE-4CCF-B6BA-8FFF6DA96164}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F3143BE0-F0CE-4CCF-B6BA-8FFF6DA96164}.Release|Any CPU.Build.0 = Release|Any CPU
 		{885A9CFD-AF7D-40DC-886A-E0C11A393DE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{885A9CFD-AF7D-40DC-886A-E0C11A393DE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{885A9CFD-AF7D-40DC-886A-E0C11A393DE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{885A9CFD-AF7D-40DC-886A-E0C11A393DE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37E126B5-0E45-4A2C-9024-F0C64DDCFBE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37E126B5-0E45-4A2C-9024-F0C64DDCFBE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37E126B5-0E45-4A2C-9024-F0C64DDCFBE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37E126B5-0E45-4A2C-9024-F0C64DDCFBE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
