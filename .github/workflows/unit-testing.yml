@@ -32,6 +32,9 @@ jobs:
           </Project>
           EOF
 
+      - name: debugging
+        run: ls -la
+
       - name: Build Core
         run: dotnet build ./PhysiXSharp.Core/PhysiXSharp.Core.csproj --configuration Release
 
