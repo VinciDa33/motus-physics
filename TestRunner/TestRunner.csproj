@@ -9,7 +9,7 @@
 
     <ItemGroup>
       <Reference Include="PhysiXSharp.Core">
-        <HintPath>..\Output\net8.0\PhysiXSharp.Core.dll</HintPath>
+        <HintPath>..\PhysiXSharp.Core\bin\Debug\net8.0\PhysiXSharp.Core.dll</HintPath>
       </Reference>
     </ItemGroup>
 
