@@ -38,13 +38,13 @@ internal sealed class ModuleManager
             return;
         }
 
-        string[] moduleFiles = Directory.GetFiles(path, "PhysiXSharp*.dll");
+        string[] moduleFiles = Directory.GetFiles(path, "*.dll");
         
         //Iterate through each file in the modules folder
         foreach (string module in moduleFiles)
         {
             Assembly assembly = Assembly.LoadFrom(module);
-            PhysiX.Logger.Log("Loading module: " +  assembly.GetName());
+            PhysiX.Logger.Log("Checking module: " +  assembly.GetName());
             
             Type[] types = assembly.GetTypes();
 

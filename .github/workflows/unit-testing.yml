@@ -7,7 +7,7 @@ on:
       - feature #Trigger on feature branch
 
 jobs:
-  test:
+  unit-testing:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,6 +21,9 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore
+
+      - name: Build Core
+        run: dotnet build ./PhysiXSharp.Core/PhysiXSharp.Core.csproj --configuration Release
 
       - name: Build solution
         run: dotnet build --no-restore
