@@ -1,6 +1,8 @@
-﻿namespace PhysiXSharp.Core.Physics;
+﻿using PhysiXSharp.Core.Utility;
 
-public class Rigidbody
+namespace PhysiXSharp.Core.Physics;
+
+public abstract class Rigidbody : PhysicsObject
 {
-    
+    protected Vector Velocity = new Vector(0d, 0d);
 }

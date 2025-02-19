@@ -1,4 +1,4 @@
-namespace PhysiXSharp.Core.ModuleInterfaces;
+namespace PhysiXSharp.Core.Modularity;
 
 public interface IPhysiXModule
 {

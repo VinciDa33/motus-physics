@@ -1,18 +1,17 @@
-﻿using PhysiXSharpe.Core.Utility;
+﻿using PhysiXSharp.Core.Utility;
 
 namespace PhysiXSharp.Core.Physics;
 
 public abstract class PhysicsObject
 {
-    public readonly int _id;
-    protected Vector _position = new Vector(0d, 0d);
-    protected float _rotation = 0f;
-    protected Rigidbody _rigidbody;
-    protected List<Collider> _colliders;
+    public readonly int Id;
+    protected Vector Position = new Vector(0d, 0d);
+    protected float Rotation = 0f;
+    protected List<Collider> Colliders = new List<Collider>();
 
-    public PhysicsObject()
+    protected PhysicsObject()
     {
-        _id = PhysicsManager.Instance.GetUniquePhysicsObjectId();
+        Id = PhysicsManager.Instance.GetUniquePhysicsObjectId();
         PhysicsManager.Instance.AddPhysicsObject(this);
     }
 }

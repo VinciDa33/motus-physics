@@ -1,4 +1,4 @@
-using PhysiXSharp.Core.ModuleInterfaces;
+using PhysiXSharp.Core.Modularity;
 
 namespace PhysiXSharp.Core.Testing;
 

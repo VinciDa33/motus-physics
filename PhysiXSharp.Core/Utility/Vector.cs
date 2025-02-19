@@ -1,7 +1,4 @@
-using System.Numerics;
-using System.Reflection.Metadata.Ecma335;
-
-namespace PhysiXSharpe.Core.Utility;
+namespace PhysiXSharp.Core.Utility;
 
 public class Vector
 {

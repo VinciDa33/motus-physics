@@ -1,4 +1,4 @@
-﻿using PhysiXSharpe.Core.Utility;
+﻿using PhysiXSharp.Core.Utility;
 
 namespace PhysiXSharp.Core.Testing;
 

@@ -2,14 +2,14 @@
 
 internal class PhysicsManager
 {
-    private static PhysicsManager _instance;
-    private static readonly object _instanceLock = new ();
+    private static PhysicsManager _instance = null!;
+    private static readonly object InstanceLock = new ();
 
     public static PhysicsManager Instance
     {
         get
         {
-            lock (_instanceLock)
+            lock (InstanceLock)
             {
                 return _instance ??= new PhysicsManager();
             }

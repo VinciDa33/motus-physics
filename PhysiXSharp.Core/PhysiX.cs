@@ -1,4 +1,5 @@
 using PhysiXSharp.Core.Logging;
+using PhysiXSharp.Core.Modularity;
 
 namespace PhysiXSharp.Core;
 

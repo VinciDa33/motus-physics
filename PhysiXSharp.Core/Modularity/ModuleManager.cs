@@ -1,18 +1,17 @@
 using System.Reflection;
-using PhysiXSharp.Core.ModuleInterfaces;
 
-namespace PhysiXSharp.Core;
+namespace PhysiXSharp.Core.Modularity;
 
 internal sealed class ModuleManager
 {
-    private static ModuleManager _instance;
-    private static readonly object _instanceLock = new ();
+    private static ModuleManager _instance = null!;
+    private static readonly object InstanceLock = new ();
 
     public static ModuleManager Instance
     {
         get
         {
-            lock (_instanceLock)
+            lock (InstanceLock)
             {
                 return _instance ??= new ModuleManager();
             }
