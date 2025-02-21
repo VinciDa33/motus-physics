@@ -20,12 +20,22 @@ internal class PhysicsManager
 
     private int _physicsObjectIdTracker = 0;
     private readonly List<PhysicsObject> _physicsObjects = new List<PhysicsObject>();
-
+    private readonly List<Rigidbody> _rigidbodies = new List<Rigidbody>();
+    
     public void AddPhysicsObject(PhysicsObject physicsObject)
     {
         _physicsObjects.Add(physicsObject);
+        if (_physicsObjects.GetType() == typeof(Rigidbody))
+            _rigidbodies.Add((Rigidbody) physicsObject);
     }
 
+    public void RemovePhysicsObject(PhysicsObject physicsObject)
+    {
+        _physicsObjects.Remove(physicsObject);
+        if (_physicsObjects.GetType() == typeof(Rigidbody))
+            _rigidbodies.Remove((Rigidbody) physicsObject);
+    }
+    
     public int GetUniquePhysicsObjectId()
     {
         //Return an id and post-increment the id tracker
@@ -34,7 +44,10 @@ internal class PhysicsManager
 
     public void Update()
     {
-        
+        foreach (Rigidbody rigidbody in _rigidbodies)
+        {
+            rigidbody.Update();
+        }
     }
     
 }

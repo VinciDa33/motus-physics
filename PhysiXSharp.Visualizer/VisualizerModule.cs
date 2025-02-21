@@ -1,13 +1,13 @@
 ﻿using PhysiXSharp.Core;
 using PhysiXSharp.Core.Modularity;
 
-namespace PhysiXSharp.Raycasting;
+namespace PhysiXSharp.Visualizer;
 
-public class RaycastingModule : IPhysiXModule
+public class VisualizerModule : IPhysiXModule
 {
     public void Initialize()
     {
-        PhysiX.Logger.Log("Ray casting module successfully loaded!");
+        PhysiX.Logger.Log("Visualizer initialized!");
     }
 
     public void Update()

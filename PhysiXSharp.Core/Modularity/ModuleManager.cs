@@ -73,4 +73,12 @@ internal sealed class ModuleManager
         foreach (IPhysiXModule module in _physiXModules)
             module.Initialize();
     }
+
+    public void UpdateModules()
+    {
+        foreach (IPhysiXModule physixModule in _physiXModules)
+        {
+            physixModule.Update();
+        }
+    }
 }

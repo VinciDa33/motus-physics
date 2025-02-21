@@ -5,4 +5,14 @@ namespace PhysiXSharp.Core.Physics;
 public abstract class Rigidbody : PhysicsObject
 {
     protected Vector Velocity = new Vector(0d, 0d);
+
+    public Rigidbody()
+    {
+        
+    }
+
+    public void Update()
+    {
+        Position += Velocity;
+    }
 }
