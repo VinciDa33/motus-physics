@@ -6,4 +6,9 @@ public static class PhysiXVisualizer
 {
     public static bool DoVisualization = true;
     public static Vector WindowSize = new Vector(800, 600);
+
+    public static bool IsVisualizerActive()
+    {
+        return VisualizerModule.IsVisualizationActive();
+    }
 }

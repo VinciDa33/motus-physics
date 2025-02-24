@@ -1,11 +1,14 @@
 ﻿using PhysiXSharp.Core;
 using PhysiXSharp.Core.Modularity;
+using PhysiXSharp.Core.Physics;
 
 namespace PhysiXSharp.Visualizer;
 
-public class VisualizerModule : IPhysiXModule
+internal class VisualizerModule : IPhysiXModule
 {
-    public void Initialize()
+    private static Thread? _visualizationThread = null;
+    
+    public void Initialize(PhysicsManager physicsManager)
     {
         PhysiX.Logger.Log("Visualizer initialized!");
         if (!PhysiXVisualizer.DoVisualization)
@@ -14,12 +17,22 @@ public class VisualizerModule : IPhysiXModule
             return;
         }
 
-        Thread visualizationThread = new Thread(new VisualizationRunner().RunVisualization);
-        visualizationThread.Start();
+        _visualizationThread = new Thread(new VisualizationRunner(physicsManager).RunVisualization);
+        _visualizationThread.Start();
+        
     }
 
     public void Update()
     {
         //throw new NotImplementedException();
+    }
+
+    public static bool IsVisualizationActive()
+    {
+        if (_visualizationThread == null)
+            return false;
+        if (!_visualizationThread.IsAlive)
+            return false;
+        return true;
     }
 }

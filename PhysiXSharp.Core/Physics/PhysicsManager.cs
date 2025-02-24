@@ -1,11 +1,11 @@
 ﻿namespace PhysiXSharp.Core.Physics;
 
-internal class PhysicsManager
+public class PhysicsManager
 {
     private static PhysicsManager _instance = null!;
     private static readonly object InstanceLock = new ();
 
-    public static PhysicsManager Instance
+    internal static PhysicsManager Instance
     {
         get
         {
@@ -34,6 +34,11 @@ internal class PhysicsManager
         _physicsObjects.Remove(physicsObject);
         if (_physicsObjects.GetType() == typeof(Rigidbody))
             _rigidbodies.Remove((Rigidbody) physicsObject);
+    }
+
+    public List<PhysicsObject> GetPhysicsObjects()
+    {
+        return _physicsObjects;
     }
     
     public int GetUniquePhysicsObjectId()

@@ -1,6 +1,6 @@
 namespace PhysiXSharp.Core.Utility;
 
-public class Vector
+public class Vector : ICloneable
 {
     public double x;
     public double y;
@@ -58,8 +58,14 @@ public class Vector
         return Math.Sqrt(dx * dx + dy * dy);
     }
     
+
     public override string ToString()
     {
         return x + " : " + y;
+    }
+
+    public object Clone()
+    {
+        return new Vector(x, y);
     }
 }

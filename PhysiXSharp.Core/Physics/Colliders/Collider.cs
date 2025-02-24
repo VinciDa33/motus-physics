@@ -1,4 +1,4 @@
-﻿namespace PhysiXSharp.Core.Physics;
+﻿namespace PhysiXSharp.Core.Physics.Colliders;
 
 public abstract class Collider
 {
@@ -15,6 +15,16 @@ public abstract class Collider
     /// </summary>
     /// <exception cref="NotImplementedException"></exception>
     public virtual AABB GetAABB()
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual void Rotate(float degrees)
+    {
+        throw new NotImplementedException();
+    }
+
+    public virtual void SetRotation(float degrees)
     {
         throw new NotImplementedException();
     }

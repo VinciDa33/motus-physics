@@ -1,4 +1,5 @@
 using System.Reflection;
+using PhysiXSharp.Core.Physics;
 
 namespace PhysiXSharp.Core.Modularity;
 
@@ -71,7 +72,7 @@ internal sealed class ModuleManager
 
         //Initialize all modules found
         foreach (IPhysiXModule module in _physiXModules)
-            module.Initialize();
+            module.Initialize(PhysicsManager.Instance);
     }
 
     public void UpdateModules()
