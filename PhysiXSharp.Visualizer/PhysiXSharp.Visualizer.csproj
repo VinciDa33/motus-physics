@@ -10,4 +10,8 @@
       <ProjectReference Include="..\PhysiXSharp.Core\PhysiXSharp.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="SFML.Net" Version="2.6.0" />
+    </ItemGroup>
+
 </Project>

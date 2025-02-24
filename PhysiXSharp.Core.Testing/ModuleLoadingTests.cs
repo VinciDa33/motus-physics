@@ -7,6 +7,7 @@ public class ModuleLoadingTests
     [SetUp]
     public void Setup()
     {
+        PhysiX.SetModulePath("../../../../Output");
         PhysiX.Initialize();
     }
 
