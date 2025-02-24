@@ -9,14 +9,15 @@ public class VisualizationRunner
 {
     public void RunVisualization()
     {
-        // Create the window
-        RenderWindow window = new RenderWindow(new VideoMode(800, 600), "SFML.NET Rectangle Example");
+        RenderWindow window = new RenderWindow(new VideoMode(800, 600), "PhysiXSharp Visualizer");
         window.Closed += (sender, e) => window.Close();
 
         // Create a rectangle shape
-        RectangleShape rectangle = new RectangleShape(new SFML.System.Vector2f(200, 100))
+        CircleShape rectangle = new CircleShape(100)
         {
-            FillColor = Color.Blue,
+            FillColor = new Color(0, 0, 0, 0),
+            OutlineColor = Color.Red,
+            OutlineThickness = 5,
             Position = new SFML.System.Vector2f(100, 100)
         };
 
@@ -24,7 +25,7 @@ public class VisualizationRunner
         while (window.IsOpen)
         {
             window.DispatchEvents();
-            window.Clear(Color.White);
+            window.Clear(new Color(30, 30, 30));
 
             // Draw the rectangle
             window.Draw(rectangle);
