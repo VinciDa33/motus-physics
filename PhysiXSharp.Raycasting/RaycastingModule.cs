@@ -8,7 +8,7 @@ public class RaycastingModule : IPhysiXModule
 {
     public void Initialize(PhysicsManager physicsManager)
     {
-        PhysiX.Logger.Log("Ray casting module successfully loaded!");
+        PhysiX.Logger.Log("Ray casting module initialized!");
     }
 
     public void Update()

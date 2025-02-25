@@ -7,7 +7,6 @@ bin/
 obj/
 out/
 Output/
-TestRunner/
 
 # Ignore user-specific Rider files
 *.suo

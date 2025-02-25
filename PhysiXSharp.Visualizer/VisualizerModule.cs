@@ -10,7 +10,7 @@ internal class VisualizerModule : IPhysiXModule
     
     public void Initialize(PhysicsManager physicsManager)
     {
-        PhysiX.Logger.Log("Visualizer initialized!");
+        PhysiX.Logger.Log("Visualizer module initialized!");
         if (!PhysiXVisualizer.DoVisualization)
         {
             PhysiX.Logger.Log("Visualization disabled!");
@@ -31,8 +31,6 @@ internal class VisualizerModule : IPhysiXModule
     {
         if (_visualizationThread == null)
             return false;
-        if (!_visualizationThread.IsAlive)
-            return false;
-        return true;
+        return _visualizationThread.IsAlive;
     }
 }

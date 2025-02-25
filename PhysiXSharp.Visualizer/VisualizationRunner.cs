@@ -11,11 +11,11 @@ namespace PhysiXSharp.Visualizer;
 
 internal class VisualizationRunner(PhysicsManager physicsManager)
 {
-    private PhysicsManager _physicsManager = physicsManager;
+    private readonly PhysicsManager _physicsManager = physicsManager;
 
-    List<Shape> shapesToRender = new List<Shape>();
-    List<Vertex[]> lineShapesToRender = new List<Vertex[]>();
-    private List<Vertex[]> linesToRender = new List<Vertex[]>();
+    private List<Shape> _shapesToRender = new List<Shape>();
+    private List<Vertex[]> _lineShapesToRender = new List<Vertex[]>();
+    private List<Vertex[]> _linesToRender = new List<Vertex[]>();
     
     public void RunVisualization()
     {
@@ -31,10 +31,10 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
 
             GenerateShapes();
             
-            foreach (Shape shape in shapesToRender)
+            foreach (Shape shape in _shapesToRender)
                 window.Draw(shape);
             
-            foreach (Vertex[] lineShape in lineShapesToRender)
+            foreach (Vertex[] lineShape in _lineShapesToRender)
                 window.Draw(lineShape, PrimitiveType.LineStrip);
 
             window.Display();
@@ -44,15 +44,18 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
 
     private void GenerateShapes()
     {
-        shapesToRender.Clear();
-        lineShapesToRender.Clear();
-        linesToRender.Clear();
+        _shapesToRender.Clear();
+        _lineShapesToRender.Clear();
+        _linesToRender.Clear();
         
         List<PhysicsObject> physicsObjects =  _physicsManager.GetPhysicsObjects();
 
-        GenerateCollisionShapes(physicsObjects);
-        GenerateAABBShapes(physicsObjects);
-        GeneratePhysicsPointers(physicsObjects);
+        if (PhysiXVisualizer.ShowCollisionShapes)
+            GenerateCollisionShapes(physicsObjects);
+        if (PhysiXVisualizer.ShowBoundingBoxes)
+            GenerateAABBShapes(physicsObjects);
+        if (PhysiXVisualizer.ShowPhysicsObjectOrigins)
+            GeneratePhysicsOrigins(physicsObjects);
     }
 
     private void GenerateCollisionShapes(List<PhysicsObject> physicsObjects)
@@ -65,7 +68,7 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
             if (po.Collider.GetType() == typeof(CircleCollider))
             {
                 float radius = (float)((CircleCollider)po.Collider).Radius;
-                shapesToRender.Add(new CircleShape(radius)
+                _shapesToRender.Add(new CircleShape(radius)
                 {
                     FillColor = new Color(0, 0, 0, 0),
                     OutlineColor = Color.Red,
@@ -85,7 +88,7 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
                     new Vertex(new Vector2f((float) (po.Position.x + vertices[3].x), (float) (po.Position.y + vertices[3].y)), Color.Red),
                     new Vertex(new Vector2f((float) (po.Position.x + vertices[0].x), (float) (po.Position.y + vertices[0].y)), Color.Red),
                 };
-                lineShapesToRender.Add(rectangle);
+                _lineShapesToRender.Add(rectangle);
             }
         }
     }
@@ -98,7 +101,7 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
                 continue;
 
             AABB aabb = po.Collider.GetAABB();
-            shapesToRender.Add(new RectangleShape(new Vector2f((float) aabb.Size.x, (float) aabb.Size.y))
+            _shapesToRender.Add(new RectangleShape(new Vector2f((float) aabb.Size.x, (float) aabb.Size.y))
             {
                 FillColor = new Color(0, 0, 0, 0),
                 OutlineColor = Color.Magenta,
@@ -108,11 +111,11 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
         }
     }
     
-    private void GeneratePhysicsPointers(List<PhysicsObject> physicsObjects)
+    private void GeneratePhysicsOrigins(List<PhysicsObject> physicsObjects)
     {
         foreach (PhysicsObject po in physicsObjects)
         {
-            shapesToRender.Add(new CircleShape(2f)
+            _shapesToRender.Add(new CircleShape(2f)
             {
                 FillColor = Color.Cyan,
                 Position = new Vector2f((float) po.Position.x - 1f, (float) po.Position.y - 1f)
