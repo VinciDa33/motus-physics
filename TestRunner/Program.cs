@@ -16,9 +16,14 @@ class Program
         TestRectangle r1 = new TestRectangle(new Vector(500, 400), new Vector(100, 50));
         r1.Rotate(35f);
 
+        TestRigid ri1 = new TestRigid(new Vector(50, 300), new Vector(50, 50));
+        ri1.SetVelocity(new Vector(20d, 0d));
+        ri1.SetAngularVelocity(45f);
+        
+        
         while (PhysiXVisualizer.IsVisualizerActive())
         {
-            PhysiX.Step();
+            PhysiX.Update();
             r1.Rotate(25f * (float) PhysiX.DeltaTime);
         }
         

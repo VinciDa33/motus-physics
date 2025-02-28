@@ -25,15 +25,21 @@ public class PhysicsManager
     public void AddPhysicsObject(PhysicsObject physicsObject)
     {
         _physicsObjects.Add(physicsObject);
-        if (_physicsObjects.GetType() == typeof(Rigidbody))
-            _rigidbodies.Add((Rigidbody) physicsObject);
     }
 
     public void RemovePhysicsObject(PhysicsObject physicsObject)
     {
         _physicsObjects.Remove(physicsObject);
-        if (_physicsObjects.GetType() == typeof(Rigidbody))
-            _rigidbodies.Remove((Rigidbody) physicsObject);
+    }
+
+    public void AddRigidbody(Rigidbody rigidbody)
+    {
+        _rigidbodies.Add(rigidbody);
+    }
+
+    public void RemoveRigidbody(Rigidbody rigidbody)
+    {
+        _rigidbodies.Remove(rigidbody);
     }
 
     public List<PhysicsObject> GetPhysicsObjects()

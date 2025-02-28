@@ -8,7 +8,7 @@ public abstract class PhysicsObject
     public readonly int Id;
     public bool IsActive { get; protected set; } = true;
     public Vector Position { get; protected set; } = new Vector(0d, 0d);
-    public float Rotation { get; private set; } = 0f;
+    public float Rotation { get; protected set; } = 0f;
     public Collider? Collider { get; private set; }
 
     protected PhysicsObject()

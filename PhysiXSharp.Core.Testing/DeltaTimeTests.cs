@@ -15,7 +15,7 @@ public class DeltaTimeTests
         
         while (stopwatch.Elapsed.TotalSeconds < 10d)
         {
-            PhysiX.Step();
+            PhysiX.Update();
             deltaSum += PhysiX.DeltaTime;
         }
         stopwatch.Stop();
@@ -37,7 +37,7 @@ public class DeltaTimeTests
         
         while (stopwatch.Elapsed.TotalSeconds < 10d)
         {
-            PhysiX.Step();
+            PhysiX.Update();
             totalSteps++;
         }
 
