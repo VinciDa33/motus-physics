@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Linq.Expressions;
 using PhysiXSharp.Core.Logging;
 using PhysiXSharp.Core.Modularity;
 using PhysiXSharp.Core.Physics;

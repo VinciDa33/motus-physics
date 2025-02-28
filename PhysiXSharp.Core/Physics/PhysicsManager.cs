@@ -59,6 +59,16 @@ public class PhysicsManager
         {
             rigidbody.Update();
         }
+        foreach (Rigidbody rigidbody in _rigidbodies)
+        {
+            foreach (PhysicsObject physicsObject in _physicsObjects)
+            {
+                if (rigidbody.Id == physicsObject.Id)
+                    continue;
+                bool result = SAT.DoCollision(rigidbody, physicsObject);
+                Console.WriteLine(result);
+            }
+        }
     }
     
 }

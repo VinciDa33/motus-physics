@@ -36,6 +36,9 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
             
             foreach (Vertex[] lineShape in _lineShapesToRender)
                 window.Draw(lineShape, PrimitiveType.LineStrip);
+            
+            foreach(Vertex[] line in _linesToRender)
+                window.Draw(line, PrimitiveType.Lines);
 
             window.Display();
         }
@@ -77,18 +80,18 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
                 });
             }
 
-            if (po.Collider.GetType() == typeof(RectangleCollider))
+            if (po.Collider is PolygonCollider collider)
             {
-                Vector[] vertices = ((RectangleCollider)po.Collider).Vertices;
-                Vertex[] rectangle =
+                List<Vector> vertices = collider.Vertices;
+
+                Vertex[] shape = new Vertex[vertices.Count + 1];
+                for (int i = 0; i < vertices.Count; i++)
                 {
-                    new Vertex(new Vector2f((float) (po.Position.x + vertices[0].x), (float) (po.Position.y + vertices[0].y)), Color.Red),
-                    new Vertex(new Vector2f((float) (po.Position.x + vertices[1].x), (float) (po.Position.y + vertices[1].y)), Color.Red),
-                    new Vertex(new Vector2f((float) (po.Position.x + vertices[2].x), (float) (po.Position.y + vertices[2].y)), Color.Red),
-                    new Vertex(new Vector2f((float) (po.Position.x + vertices[3].x), (float) (po.Position.y + vertices[3].y)), Color.Red),
-                    new Vertex(new Vector2f((float) (po.Position.x + vertices[0].x), (float) (po.Position.y + vertices[0].y)), Color.Red),
-                };
-                _lineShapesToRender.Add(rectangle);
+                    shape[i] = new Vertex(new Vector2f((float)(po.Position.x + vertices[i].x), (float)(po.Position.y + vertices[i].y)), Color.Red);
+                }
+                shape[^1] = new Vertex(new Vector2f((float)(po.Position.x + vertices[0].x), (float)(po.Position.y + vertices[0].y)), Color.Red);
+                
+                _lineShapesToRender.Add(shape);
             }
         }
     }
@@ -100,7 +103,7 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
             if (po.Collider == null)
                 continue;
 
-            AABB aabb = po.Collider.GetAABB();
+            AABB aabb = po.Collider.AxisAlignedBoundingBox;
             _shapesToRender.Add(new RectangleShape(new Vector2f((float) aabb.Size.x, (float) aabb.Size.y))
             {
                 FillColor = new Color(0, 0, 0, 0),

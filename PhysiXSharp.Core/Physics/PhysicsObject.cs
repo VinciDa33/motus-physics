@@ -26,6 +26,7 @@ public abstract class PhysicsObject
     {
         Collider = collider;
         Collider.SetPhysicsObject(this);
+        Collider.CalculateAABB();
         Collider.SetRotation(Rotation);
     }
 

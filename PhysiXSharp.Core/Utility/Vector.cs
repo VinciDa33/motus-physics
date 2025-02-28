@@ -36,6 +36,11 @@ public class Vector : ICloneable
         double mag = Magnitude();
         return new Vector(x / mag, y / mag);
     }
+
+    public Vector Normal()
+    {
+        return new Vector(-y, x).Normalized();
+    }
     
     public void Rotate(float angle)
     {
@@ -51,13 +56,37 @@ public class Vector : ICloneable
         y = py;
     }
     
+    public Vector Rotated(float angle)
+    {
+        double theta = (Math.PI / 180) * angle;
+
+        double cs = Math.Cos(theta);
+        double sn = Math.Sin(theta);
+    
+        double px = x * cs - y * sn;
+        double py = x * sn + y * cs;
+
+        return new Vector(px, py);
+    }
+    
     public static double Distance(Vector v1, Vector v2) {
         double dx = v1.x - v2.x;
         double dy = v1.y - v2.y;
     
         return Math.Sqrt(dx * dx + dy * dy);
     }
+
+    public static double DistanceSquared(Vector v1, Vector v2) {
+        double dx = v1.x - v2.x;
+        double dy = v1.y - v2.y;
     
+        return dx * dx + dy * dy;
+    }
+    
+    public static double Dot(Vector v1, Vector v2)
+    {
+        return v1.x * v2.y - v1.y * v2.x;
+    }
 
     public override string ToString()
     {
