@@ -4,6 +4,7 @@ public class Vector : ICloneable
 {
     public double x;
     public double y;
+    public static readonly Vector Zero = new Vector(0, 0);
     
     public Vector(double x, double y)
     {
@@ -17,6 +18,8 @@ public class Vector : ICloneable
     public static Vector operator +(Vector v1, Vector v2) => new Vector(v1.x + v2.x, v1.y + v2.y);
     public static Vector operator -(Vector v1, Vector v2) => new Vector(v1.x - v2.x, v1.y - v2.y);
     public static Vector operator *(Vector v1, double d) => new Vector(v1.x * d, v1.y * d);
+    public static Vector operator *(double d, Vector v1) => new Vector(v1.x * d, v1.y * d);
+
     public static Vector operator /(Vector v1, double d) => new Vector(v1.x / d, v1.y / d);
 
     public static bool operator ==(Vector v1, Vector v2) => v1.x == v2.x && v1.y == v2.y;
@@ -28,12 +31,26 @@ public class Vector : ICloneable
     
     public void Normalize() {
         double mag = Magnitude();
+        
+        if (mag == 0)
+        {
+            PhysiX.Logger.LogError("Division by zero during normalization!");
+            return;
+        }
+        
         x /= mag;
         y /= mag;
     }
   
     public Vector Normalized() {
         double mag = Magnitude();
+        
+        if (mag == 0)
+        {
+            PhysiX.Logger.LogError("Division by zero during normalization!");
+            return Vector.Zero;
+        }
+        
         return new Vector(x / mag, y / mag);
     }
 

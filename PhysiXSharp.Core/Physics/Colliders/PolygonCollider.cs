@@ -20,8 +20,6 @@ public class PolygonCollider : Collider
 
     internal sealed override void CalculateAABB ()
     {
-        Vector position = PhysicsObject == null ? new Vector(0, 0) : PhysicsObject.Position;
-
         double smallestX = Vertices[0].x;
         double smallestY = Vertices[0].y;
         double largestX = Vertices[0].x;
@@ -39,7 +37,7 @@ public class PolygonCollider : Collider
                 largestY = vertex.y;
         }
 
-        Vector origin = position + new Vector(smallestX, smallestY);
+        Vector origin = Position + new Vector(smallestX, smallestY);
         Vector size = new Vector(largestX - smallestX, largestY - smallestY);
 
         AxisAlignedBoundingBox = new AABB(origin, size);
@@ -73,14 +71,12 @@ public class PolygonCollider : Collider
 
     internal override (double min, double max) Project(Vector axis)
     {
-        Vector position = PhysicsObject == null ? new Vector(0, 0) : PhysicsObject.Position;
-        
-        double min = Vector.Dot(position + Vertices[0], axis);
+        double min = Vector.Dot(Position + Vertices[0], axis);
         double max = min;
 
         foreach (Vector vertex in Vertices)
         {
-            double projection = Vector.Dot(position + vertex, axis);
+            double projection = Vector.Dot(Position + vertex, axis);
             if (projection > max) max = projection;
             if (projection < min) min = projection;
         }
@@ -102,14 +98,12 @@ public class PolygonCollider : Collider
 
     internal Vector ClosestVertexToPoint(Vector point)
     {
-        Vector position = PhysicsObject == null ? new Vector(0, 0) : PhysicsObject.Position;
-        
-        Vector closest = position + Vertices[0];
+        Vector closest = Position + Vertices[0];
         double minDist = Vector.DistanceSquared(closest, point);
 
         foreach (Vector vertex in Vertices)
         {
-            double dist = Vector.DistanceSquared(position + vertex, point);
+            double dist = Vector.DistanceSquared(Position + vertex, point);
             if (dist < minDist)
             {
                 minDist = dist;

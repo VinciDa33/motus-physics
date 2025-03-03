@@ -10,17 +10,20 @@ public abstract class Rigidbody : PhysicsObject
     private Vector _gravity = new Vector(0d, 0d);
     public Rigidbody()
     {
+        IsStatic = false;
         PhysicsManager.Instance.AddRigidbody(this);
     }
     
     public Rigidbody(double mass)
     {
+        IsStatic = false;
         PhysicsManager.Instance.AddRigidbody(this);
         _mass = mass;
     }
     
     public Rigidbody(double mass, Vector gravity)
     {
+        IsStatic = false;
         PhysicsManager.Instance.AddRigidbody(this);
         _mass = mass;
         _gravity = gravity;
@@ -28,6 +31,7 @@ public abstract class Rigidbody : PhysicsObject
     
     public Rigidbody(Vector velocity, float angularVelocity, double mass, Vector gravity)
     {
+        IsStatic = false;
         PhysicsManager.Instance.AddRigidbody(this);
         Velocity = velocity;
         AngularVelocity = angularVelocity;
@@ -37,13 +41,37 @@ public abstract class Rigidbody : PhysicsObject
 
     public void Update()
     {
-        Position += Velocity * PhysiX.FixedDeltaTime;
+        TranslatePosition(Velocity * PhysiX.FixedDeltaTime);
+        Rotate((float) (AngularVelocity * PhysiX.FixedDeltaTime));
         Velocity += _gravity * PhysiX.FixedDeltaTime;
         
-        Rotation += (float) (AngularVelocity * PhysiX.FixedDeltaTime);
         Collider?.SetRotation(Rotation);
     }
 
+    public void SetPosition(Vector position)
+    {
+        Position = position;
+        Collider?.CalculateAABB();
+    }
+
+    public void TranslatePosition(Vector translation)
+    {
+        Position += translation;
+        Collider?.CalculateAABB();
+    }
+    
+    public void SetRotation(float degrees)
+    {
+        Rotation = degrees;
+        Collider?.SetRotation(degrees);
+    }
+
+    public void Rotate(float degrees)
+    {
+        Rotation += degrees;
+        Collider?.Rotate(degrees);
+    }
+    
     public void SetVelocity(Vector velocity)
     {
         Velocity = velocity;

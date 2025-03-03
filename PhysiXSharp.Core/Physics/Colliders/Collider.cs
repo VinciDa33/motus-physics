@@ -4,8 +4,9 @@ namespace PhysiXSharp.Core.Physics.Colliders;
 
 public abstract class Collider
 {
-    private bool _isTrigger = false;
+    public bool IsTrigger { get; private set; } = false;
     public PhysicsObject? PhysicsObject { get; private set; }
+    public Vector Position => PhysicsObject == null ? Vector.Zero : PhysicsObject.Position;
     public AABB AxisAlignedBoundingBox { get; protected set; }
     
     
@@ -13,24 +14,38 @@ public abstract class Collider
     {
         PhysicsObject = physicsObject;
     }
-
-    /// <summary>
-    /// Returns an axis-aligned bounding box for this collider.
-    /// </summary>
-    /// <exception cref="NotImplementedException"></exception>
+    
     internal abstract void CalculateAABB();
 
-    internal virtual void Rotate(float degrees)
-    {
-        throw new NotImplementedException();
-    }
+    internal abstract void Rotate(float degrees);
 
-    internal virtual void SetRotation(float degrees)
-    {
-        throw new NotImplementedException();
-    }
+    internal abstract void SetRotation(float degrees);
 
     internal abstract (double min, double max) Project(Vector axis);
 
     internal abstract List<Vector> GetNormals();
+
+    /// <summary>
+    /// Returns true if the axis aligned bounding boxes of the two colliders are overlapping
+    /// </summary>
+    /// <param name="collider1"></param>
+    /// <param name="collider2 "></param>
+    /// <returns></returns>
+    public static bool OverlapAABB(Collider collider1, Collider collider2)
+    {
+        Vector origin1 = collider1.AxisAlignedBoundingBox.Origin;
+        Vector size1 = collider1.AxisAlignedBoundingBox.Size;
+        
+        Vector origin2 = collider2.AxisAlignedBoundingBox.Origin;
+        Vector size2 = collider2.AxisAlignedBoundingBox.Size;
+        
+        
+        if (origin1.x > origin2.x + size2.x || origin1.x + size1.x < origin2.x)
+            return false;
+
+        if (origin1.y > origin2.y + size2.y || origin1.y + size1.y < origin2.y)
+            return false;        
+
+        return true;
+    }
 }

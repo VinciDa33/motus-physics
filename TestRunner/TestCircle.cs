@@ -4,7 +4,7 @@ using PhysiXSharp.Core.Utility;
 
 namespace TestRunner;
 
-public class TestCircle : PhysicsObject
+public class TestCircle : Rigidbody
 {
     public TestCircle(Vector position, double radius)
     {

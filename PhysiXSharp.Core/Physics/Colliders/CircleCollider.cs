@@ -13,9 +13,7 @@ public class CircleCollider : Collider
 
     internal sealed override void CalculateAABB ()
     {
-        Vector position = PhysicsObject == null ? new Vector(0, 0) : PhysicsObject.Position;
-        
-        Vector origin = new Vector(position.x - Radius, position.y - Radius);
+        Vector origin = new Vector(Position.x - Radius, Position.y - Radius);
         Vector size = new Vector(Radius * 2d, Radius * 2d);
 
         AxisAlignedBoundingBox = new AABB(origin, size);
@@ -33,8 +31,7 @@ public class CircleCollider : Collider
 
     internal override (double min, double max) Project(Vector axis)
     {
-        Vector position = PhysicsObject == null ? new Vector(0, 0) : PhysicsObject.Position;
-        double centerProjection = Vector.Dot(position, axis);
+        double centerProjection = Vector.Dot(Position, axis);
         return (centerProjection - Radius, centerProjection + Radius);
     }
 

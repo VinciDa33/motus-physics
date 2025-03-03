@@ -7,10 +7,12 @@ public abstract class PhysicsObject
 {
     public readonly int Id;
     public bool IsActive { get; protected set; } = true;
+    internal bool IsStatic = true;
     public Vector Position { get; protected set; } = new Vector(0d, 0d);
     public float Rotation { get; protected set; } = 0f;
     public Collider? Collider { get; private set; }
-
+    
+    
     protected PhysicsObject()
     {
         Id = PhysicsManager.Instance.GetUniquePhysicsObjectId();
@@ -28,12 +30,6 @@ public abstract class PhysicsObject
         Collider.SetPhysicsObject(this);
         Collider.CalculateAABB();
         Collider.SetRotation(Rotation);
-    }
-
-    public void Rotate(float degrees)
-    {
-        Rotation += degrees;
-        Collider?.Rotate(degrees);
     }
     
     public void Destroy()
