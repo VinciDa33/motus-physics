@@ -40,14 +40,14 @@ public class PolygonCollider : Collider
         Vector origin = Position + new Vector(smallestX, smallestY);
         Vector size = new Vector(largestX - smallestX, largestY - smallestY);
 
-        AxisAlignedBoundingBox = new AABB(origin, size);
+        AABB aabb = new AABB(origin, size);
+        AxisAlignedBoundingBox = aabb;
     }
     
     internal override void Rotate(float degrees)
     {
-        //Reset vertices
         List<Vector> newVertices = new List<Vector>();
-        foreach (Vector vertex in _baseVertices)
+        foreach (Vector vertex in Vertices)
         {
             newVertices.Add(((Vector)vertex.Clone()).Rotated(degrees));
         }

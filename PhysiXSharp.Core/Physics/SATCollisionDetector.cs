@@ -125,6 +125,7 @@ public class SATCollisionDetector : ICollisionDetector
 
         Vector direction = p.Position - c.Position;
 
+        
         if (Vector.Dot(direction, normal) < 0f)
         {
             normal = -normal;

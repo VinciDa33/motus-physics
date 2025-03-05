@@ -79,6 +79,7 @@ public class PhysicsManager
 
     private void SeparateBodies(PhysicsObject bodyA, PhysicsObject bodyB, Vector mtv)
     {
+        Console.WriteLine(mtv);
         if (bodyA.IsStatic)
         {
             ((Rigidbody) bodyB).TranslatePosition(mtv);
