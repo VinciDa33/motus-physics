@@ -10,6 +10,7 @@ public static class PhysiXVisualizer
     public static bool ShowCollisionShapes = true;
     public static bool ShowBoundingBoxes = true;
     public static bool ShowPhysicsObjectOrigins = true;
+    public static bool ShowEdgeNormals = true;
     
     public static bool IsVisualizerActive()
     {

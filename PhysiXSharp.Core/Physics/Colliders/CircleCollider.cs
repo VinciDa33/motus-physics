@@ -35,8 +35,8 @@ public class CircleCollider : Collider
         return (centerProjection - Radius, centerProjection + Radius);
     }
 
-    internal override List<Vector> GetNormals()
+    internal override void CalculateNormals()
     {
-        return new List<Vector>();
+        Normals = new List<Vector>();
     }
 }

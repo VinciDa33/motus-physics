@@ -23,7 +23,7 @@ class Program
         
         TestRigid ri1 = new TestRigid(new Vector(500, 500), new Vector(50, 50));
         TestRigid ri2 = new TestRigid(new Vector(300, 500), new Vector(50, 50));
-        //ri2.Rotate(45f);
+        ri2.Rotate(45f);
         //ri2.SetVelocity(new Vector(0d, 40d));
         
         t2.SetVelocity(new Vector(0d, 40d));
@@ -41,10 +41,14 @@ class Program
         p1.SetVelocity(new Vector(0d, 40d));
         p1.SetAngularVelocity(-20f);
         */
+        
+        
         while (PhysiXVisualizer.IsVisualizerActive())
         {
-            PhysiX.Update();
+            //PhysiX.Update();
         }
+        
+        PhysiX.Shutdown();
         
         Console.WriteLine("Test-sim ended");
     }

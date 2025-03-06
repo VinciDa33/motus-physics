@@ -8,23 +8,24 @@ public abstract class Collider
     public PhysicsObject? PhysicsObject { get; private set; }
     public Vector Position => PhysicsObject == null ? Vector.Zero : PhysicsObject.Position;
     public AABB AxisAlignedBoundingBox { get; protected set; }
-    
+    public List<Vector> Normals { get; protected set; }
     
     public void SetPhysicsObject(PhysicsObject physicsObject)
     {
         PhysicsObject = physicsObject;
+        CalculateAABB();
+        CalculateNormals();
     }
     
     internal abstract void CalculateAABB();
-
+    internal abstract void CalculateNormals();
+    
     internal abstract void Rotate(float degrees);
 
     internal abstract void SetRotation(float degrees);
 
     internal abstract (double min, double max) Project(Vector axis);
-
-    internal abstract List<Vector> GetNormals();
-
+    
     /// <summary>
     /// Returns true if the axis aligned bounding boxes of the two colliders are overlapping
     /// </summary>

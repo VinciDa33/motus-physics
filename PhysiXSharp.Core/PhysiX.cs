@@ -9,6 +9,8 @@ public static class PhysiX
 {
     public static bool IsInitialized { get; private set; } = false;
     private static string _modulePath = ".";
+    private static Thread _physicsThread;
+    private static bool _abortThread = false;
     private static int _physicsStepsPerSecond = 50;
 
     
@@ -55,6 +57,8 @@ public static class PhysiX
         DeltaStopwatch.Start();
         FixedDeltaStopwatch.Start();
         
+        _physicsThread = new Thread(Update);
+        _physicsThread.Start();
     }
 
     /// <summary>
@@ -62,25 +66,25 @@ public static class PhysiX
     /// Call this once every iteration of the main game loop.
     /// PhysiX must be initialized.
     /// </summary>
-    public static void Update()
+    private static void Update()
     {
-        if (!IsInitialized)
+        while (!_abortThread)
         {
-            Logger.LogError("PhysiX must be initialized before calling Step()!");
-            return;
-        }
-        
-        DeltaTime = DeltaStopwatch.Elapsed.TotalSeconds - ElapsedSecondsSinceInitialization;
-        ElapsedSecondsSinceInitialization += DeltaTime;
-        _deltaSum += DeltaTime;
 
-        while (_deltaSum >= 1d / _physicsStepsPerSecond)
-        {
-            FixedDeltaTime = FixedDeltaStopwatch.Elapsed.TotalSeconds - _fixedSecondsElapsed;
-            _fixedSecondsElapsed += FixedDeltaTime;
-            Step();
-            _deltaSum -= 1d / _physicsStepsPerSecond;
+            DeltaTime = DeltaStopwatch.Elapsed.TotalSeconds - ElapsedSecondsSinceInitialization;
+            ElapsedSecondsSinceInitialization += DeltaTime;
+            _deltaSum += DeltaTime;
+
+            while (_deltaSum >= 1d / _physicsStepsPerSecond)
+            {
+                FixedDeltaTime = FixedDeltaStopwatch.Elapsed.TotalSeconds - _fixedSecondsElapsed;
+                _fixedSecondsElapsed += FixedDeltaTime;
+                Step();
+                _deltaSum -= 1d / _physicsStepsPerSecond;
+            }
         }
+
+        _abortThread = false;
     }
     
     private static void Step()
@@ -105,5 +109,19 @@ public static class PhysiX
     public static void SetPhysicsUpdateRate(int stepsPerSecond)
     {
         _physicsStepsPerSecond = stepsPerSecond;
+    }
+
+    /// <summary>
+    /// Stops the physics thread and ends the physics simulation.
+    /// </summary>
+    public static void Shutdown()
+    {
+        if (!_physicsThread.IsAlive)
+        {
+            Logger.LogWarning("Cannot abort physiX thread. It is already not running!");
+            return;
+        }
+        
+        _abortThread = true;
     }
 }

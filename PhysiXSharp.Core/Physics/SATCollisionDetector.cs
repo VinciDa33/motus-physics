@@ -66,8 +66,8 @@ public class SATCollisionDetector : ICollisionDetector
         depth = double.MaxValue;
         
         List<Vector> axes = new List<Vector>();
-        axes.AddRange(p1.GetNormals());
-        axes.AddRange(p2.GetNormals());
+        axes.AddRange(p1.Normals);
+        axes.AddRange(p2.Normals);
         
         foreach (Vector axis in axes)
         {
@@ -102,7 +102,7 @@ public class SATCollisionDetector : ICollisionDetector
         depth = double.MaxValue;
 
         List<Vector> axes = new List<Vector>();
-        axes.AddRange(p.GetNormals());
+        axes.AddRange(p.Normals);
         Vector closestVertex = p.ClosestVertexToPoint(c.Position);
         axes.Add((closestVertex - c.Position).Normalized());
         

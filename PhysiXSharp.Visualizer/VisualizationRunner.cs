@@ -59,6 +59,7 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
             GenerateAABBShapes(physicsObjects);
         if (PhysiXVisualizer.ShowPhysicsObjectOrigins)
             GeneratePhysicsOrigins(physicsObjects);
+        GenerateNormals(physicsObjects);
     }
 
     private void GenerateCollisionShapes(List<PhysicsObject> physicsObjects)
@@ -123,6 +124,24 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
                 FillColor = Color.Cyan,
                 Position = new Vector2f((float) po.Position.x - 1f, (float) po.Position.y - 1f)
             });
+        }
+    }
+
+    private void GenerateNormals(List<PhysicsObject> physicsObjects)
+    {
+        foreach (PhysicsObject po in physicsObjects)
+        {
+            if (po.Collider == null)
+                continue;
+
+            List<Vector> normals = po.Collider.Normals;
+            foreach (Vector normal in normals)
+            {
+                Vertex[] line = new Vertex[2];
+                line[0] = new Vertex(new Vector2f((float)po.Position.x, (float)po.Position.y), Color.Green);
+                line[1] = new Vertex(new Vector2f((float) (po.Position.x + normal.x * 12d), (float) (po.Position.y + normal.y * 12d)), Color.Green);
+                _linesToRender.Add(line);
+            }
         }
     }
 }

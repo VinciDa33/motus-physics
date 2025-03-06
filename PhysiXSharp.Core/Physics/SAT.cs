@@ -11,8 +11,8 @@ public class SAT
             return false;
 
         List<Vector> axes = new List<Vector>();
-        axes.AddRange(po1.Collider.GetNormals());
-        axes.AddRange(po2.Collider.GetNormals());
+        axes.AddRange(po1.Collider.Normals);
+        axes.AddRange(po2.Collider.Normals);
         
         if (po1.Collider is CircleCollider && po2.Collider is PolygonCollider p2)
         {

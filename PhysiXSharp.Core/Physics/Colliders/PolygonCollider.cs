@@ -55,6 +55,7 @@ public class PolygonCollider : Collider
         Vertices = newVertices;
         
         CalculateAABB();
+        CalculateNormals();
     }
 
     internal override void SetRotation(float degrees)
@@ -84,7 +85,7 @@ public class PolygonCollider : Collider
         return (min, max);
     }
 
-    internal override List<Vector> GetNormals()
+    internal override void CalculateNormals()
     {
         List<Vector> normals = new List<Vector>();
 
@@ -93,7 +94,7 @@ public class PolygonCollider : Collider
             Vector edge = Vertices[(i + 1) % Vertices.Count] - Vertices[i];
             normals.Add(edge.Normal());
         }
-        return normals;
+        Normals = normals;
     }
 
     internal Vector ClosestVertexToPoint(Vector point)

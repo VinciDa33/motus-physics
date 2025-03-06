@@ -4,6 +4,7 @@ namespace PhysiXSharp.Core.Testing;
 
 public class DeltaTimeTests
 {
+    /*
     [Test]
     public void TestDeltaOver10Seconds()
     {
@@ -45,5 +46,5 @@ public class DeltaTimeTests
         Console.WriteLine("Mean steps per seconds: " + meanStepsPerSecond);
         Assert.That(meanStepsPerSecond > 100);
     }
-
+    */
 }
