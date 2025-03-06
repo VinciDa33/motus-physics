@@ -4,9 +4,9 @@ using PhysiXSharp.Core.Utility;
 
 namespace TestRunner;
 
-public class TestRectangle : PhysicsObject
+public class RigidRectangle : Rigidbody
 {
-    public TestRectangle(Vector position, Vector size)
+    public RigidRectangle(Vector position, Vector size)
     {
         Position = position;
         AddCollider(new RectangleCollider(size));

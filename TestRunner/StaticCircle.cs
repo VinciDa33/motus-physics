@@ -4,9 +4,9 @@ using PhysiXSharp.Core.Utility;
 
 namespace TestRunner;
 
-public class TestCircle : Rigidbody
+public class StaticCircle : Staticbody
 {
-    public TestCircle(Vector position, double radius)
+    public StaticCircle(Vector position, double radius)
     {
         Position = position;
         AddCollider(new CircleCollider(radius));

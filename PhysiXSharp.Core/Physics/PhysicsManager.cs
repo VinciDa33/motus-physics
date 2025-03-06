@@ -69,10 +69,12 @@ public class PhysicsManager
                 if (rigidbody.Id == physicsObject.Id)
                     continue;
                 _collisionDetector.CheckCollision(rigidbody, physicsObject, out CollisionData data);
-                if (data.Colliding)
-                    SeparateBodies(data.PhysicsObject1, data.PhysicsObject2, data.CollisionNormal * data.PenetrationDepth);
+                //if (data.Colliding)
+                //    SeparateBodies(data.PhysicsObject1, data.PhysicsObject2, data.CollisionNormal * data.PenetrationDepth);
                 //bool result = SAT.DoCollision(rigidbody, physicsObject);
                 //Console.WriteLine(result);
+                if (data.Colliding)
+                    Console.WriteLine("Collision! Object [" + rigidbody.Id + "] and [" + physicsObject.Id + "]");
             }
         }
     }

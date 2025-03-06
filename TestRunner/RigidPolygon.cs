@@ -4,11 +4,11 @@ using PhysiXSharp.Core.Utility;
 
 namespace TestRunner;
 
-public class TestPoly : Rigidbody
+public class RigidPolygon : Rigidbody
 {
-    public TestPoly(Vector position, Vector[] points)
+    public RigidPolygon(Vector position, Vector[] vertices)
     {
         Position = position;
-        AddCollider(new PolygonCollider(points));
+        AddCollider(new PolygonCollider(vertices));
     }
 }

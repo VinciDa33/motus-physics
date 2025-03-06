@@ -59,7 +59,8 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
             GenerateAABBShapes(physicsObjects);
         if (PhysiXVisualizer.ShowPhysicsObjectOrigins)
             GeneratePhysicsOrigins(physicsObjects);
-        GenerateNormals(physicsObjects);
+        if (PhysiXVisualizer.ShowEdgeNormals)
+            GenerateNormals(physicsObjects);
     }
 
     private void GenerateCollisionShapes(List<PhysicsObject> physicsObjects)

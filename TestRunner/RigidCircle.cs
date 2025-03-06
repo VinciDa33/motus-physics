@@ -4,11 +4,11 @@ using PhysiXSharp.Core.Utility;
 
 namespace TestRunner;
 
-public class TestRigid : Rigidbody
+public class RigidCircle : Rigidbody
 {
-    public TestRigid(Vector position, Vector size)
+    public RigidCircle(Vector position, double radius)
     {
         Position = position;
-        AddCollider(new RectangleCollider(size));
+        AddCollider(new CircleCollider(radius));
     }
 }
