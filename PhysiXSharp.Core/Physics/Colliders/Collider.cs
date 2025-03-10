@@ -1,4 +1,5 @@
-﻿using PhysiXSharp.Core.Utility;
+﻿using PhysiXSharp.Core.Physics.Bodies;
+using PhysiXSharp.Core.Utility;
 
 namespace PhysiXSharp.Core.Physics.Colliders;
 
@@ -32,17 +33,17 @@ public abstract class Collider
     /// <returns></returns>
     public static bool OverlapAABB(Collider collider1, Collider collider2)
     {
-        Vector origin1 = collider1.AxisAlignedBoundingBox.Origin;
-        Vector size1 = collider1.AxisAlignedBoundingBox.Size;
+        Vector minA = collider1.Position + collider1.AxisAlignedBoundingBox.Min;
+        Vector maxA = collider1.Position + collider1.AxisAlignedBoundingBox.Max;
         
-        Vector origin2 = collider2.AxisAlignedBoundingBox.Origin;
-        Vector size2 = collider2.AxisAlignedBoundingBox.Size;
+        Vector minB = collider2.Position + collider2.AxisAlignedBoundingBox.Min;
+        Vector maxB = collider2.Position + collider2.AxisAlignedBoundingBox.Max;
         
         
-        if (origin1.x > origin2.x + size2.x || origin1.x + size1.x < origin2.x)
+        if (minA.x > maxB.x ||  minB.x > maxA.x)
             return false;
 
-        if (origin1.y > origin2.y + size2.y || origin1.y + size1.y < origin2.y)
+        if (minA.y > maxB.y ||  minB.y > maxA.y)
             return false;        
 
         return true;

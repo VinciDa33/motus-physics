@@ -11,6 +11,7 @@ public static class PhysiXVisualizer
     public static bool ShowBoundingBoxes = false;
     public static bool ShowPhysicsObjectOrigins = false;
     public static bool ShowEdgeNormals = true;
+    public static bool ShowCollisionContactPoints = true;
     
     public static bool IsVisualizerActive()
     {

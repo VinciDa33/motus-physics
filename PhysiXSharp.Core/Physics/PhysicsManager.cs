@@ -1,4 +1,7 @@
-﻿using PhysiXSharp.Core.Physics.Colliders;
+﻿using PhysiXSharp.Core.Physics.Bodies;
+using PhysiXSharp.Core.Physics.Colliders;
+using PhysiXSharp.Core.Physics.Collision;
+using PhysiXSharp.Core.Physics.Data;
 using PhysiXSharp.Core.Utility;
 
 namespace PhysiXSharp.Core.Physics;
@@ -25,6 +28,7 @@ public class PhysicsManager
     private int _physicsObjectIdTracker = 0;
     private readonly List<PhysicsObject> _physicsObjects = new List<PhysicsObject>();
     private readonly List<Rigidbody> _rigidbodies = new List<Rigidbody>();
+    public List<CollisionManifold> Manifolds { get; private set; } = new List<CollisionManifold>();
     
     public void AddPhysicsObject(PhysicsObject physicsObject)
     {
@@ -61,48 +65,32 @@ public class PhysicsManager
     {
         foreach (Rigidbody rigidbody in _rigidbodies)
         {
+            if (!rigidbody.IsActive)
+                continue;
             rigidbody.Update();
         }
-        
+
+        List<CollisionManifold> newManifolds = new List<CollisionManifold>();
         for (int i = 0; i < _physicsObjects.Count; i++)
         {
             for (int j = i + 1; j < _physicsObjects.Count; j++)
             {
+                //Skip collisions with inactive objects
+                if (!_physicsObjects[i].IsActive || !_physicsObjects[j].IsActive)
+                    continue;
+                
+                //Skip collisions between static objects
                 if (_physicsObjects[i] is not Rigidbody && _physicsObjects[j] is not Rigidbody)
                     continue;
                 
-                //if (rigidbody.Id == physicsObject.Id)
-                //    continue;
-                _collisionDetector.CheckCollision(_physicsObjects[i], _physicsObjects[j], out CollisionData data);
-                if (data.Colliding)
+                if (_collisionDetector.CheckCollision(_physicsObjects[i], _physicsObjects[j], out CollisionManifold? manifold))
                 {
-                    //rigidbody.SetVelocity(Vector.Zero);
-                    //Console.WriteLine(data.CollisionNormal);
-                    SeparateBodies(data.PhysicsObject1, data.PhysicsObject2, data.CollisionNormal * data.PenetrationDepth);
+                    newManifolds.Add(manifold);
+                    //SeparateBodies(manifold.PhysicsObject1, manifold.PhysicsObject2, manifold.CollisionNormal * manifold.PenetrationDepth);
                 }
-                //bool result = SAT.DoCollision(rigidbody, physicsObject);
-                //Console.WriteLine(result);
-                //if (data.Colliding)
-                //    Console.WriteLine("Collision! Object [" + rigidbody.Id + "] and [" + physicsObject.Id + "]");
             }
         }
-    }
 
-    private void SeparateBodies(PhysicsObject bodyA, PhysicsObject bodyB, Vector correction)
-    {
-        if (bodyA.IsStatic)
-        {
-            ((Rigidbody) bodyB).TranslatePosition(correction);
-        }
-        else if (bodyB.IsStatic)
-        {
-            ((Rigidbody) bodyA).TranslatePosition(-correction);
-        }
-        else
-        {
-            ((Rigidbody) bodyA).TranslatePosition(-correction / 2d);
-            ((Rigidbody) bodyB).TranslatePosition(correction / 2d);
-        }
+        Manifolds = newManifolds;
     }
-    
 }

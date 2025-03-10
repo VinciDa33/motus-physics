@@ -18,24 +18,10 @@ public static class PhysiX
     /// Default PhysiX logger object for printing to the console.
     /// </summary>
     public static Logger Logger { get; } = new Logger("PhysiXSharp");
+    public static Time Time { get; } = new Time();
     private static readonly Stopwatch DeltaStopwatch = new Stopwatch();
     private static readonly Stopwatch FixedDeltaStopwatch = new Stopwatch();
     
-    /// <summary>
-    /// The time elapsed since last call of Update() in seconds.
-    /// </summary>
-    public static double DeltaTime { get; private set; }
-    
-    /// <summary>
-    /// The time elapsed since PhysiXSharp was initialized in seconds.
-    /// </summary>
-    public static double ElapsedSecondsSinceInitialization { get; private set; } = 0;
-
-    /// <summary>
-    /// Time elapsed since the last fixed physics step was handled.
-    /// This value remains mostly stable. Use standard DeltaTime when modifying values from outside the physics system.
-    /// </summary>
-    public static double FixedDeltaTime { get; private set; }
     private static double _fixedSecondsElapsed = 0;
     private static double _deltaSum = 0;
     
@@ -51,6 +37,8 @@ public static class PhysiX
             Logger.LogWarning("Initialization should only occur once!");
             return;
         }
+
+        Time.FixedTimeStep = 1d / _physicsStepsPerSecond;
 
         IsInitialized = true;
         ModuleManager.Instance.Load(_modulePath);
@@ -71,14 +59,14 @@ public static class PhysiX
         while (!_abortThread)
         {
 
-            DeltaTime = DeltaStopwatch.Elapsed.TotalSeconds - ElapsedSecondsSinceInitialization;
-            ElapsedSecondsSinceInitialization += DeltaTime;
-            _deltaSum += DeltaTime;
+            Time.DeltaTime = DeltaStopwatch.Elapsed.TotalSeconds - Time.ElapsedTime;
+            Time.ElapsedTime += Time.DeltaTime;
+            _deltaSum += Time.DeltaTime;
 
             while (_deltaSum >= 1d / _physicsStepsPerSecond)
             {
-                FixedDeltaTime = FixedDeltaStopwatch.Elapsed.TotalSeconds - _fixedSecondsElapsed;
-                _fixedSecondsElapsed += FixedDeltaTime;
+                Time.FixedDeltaTime = FixedDeltaStopwatch.Elapsed.TotalSeconds - _fixedSecondsElapsed;
+                _fixedSecondsElapsed += Time.FixedDeltaTime;
                 Step();
                 _deltaSum -= 1d / _physicsStepsPerSecond;
             }
@@ -109,6 +97,7 @@ public static class PhysiX
     public static void SetPhysicsUpdateRate(int stepsPerSecond)
     {
         _physicsStepsPerSecond = stepsPerSecond;
+        Time.FixedTimeStep = 1d / _physicsStepsPerSecond;
     }
 
     /// <summary>

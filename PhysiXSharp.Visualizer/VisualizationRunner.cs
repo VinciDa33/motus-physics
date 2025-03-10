@@ -1,7 +1,9 @@
 ﻿
 
 using PhysiXSharp.Core.Physics;
+using PhysiXSharp.Core.Physics.Bodies;
 using PhysiXSharp.Core.Physics.Colliders;
+using PhysiXSharp.Core.Physics.Data;
 using PhysiXSharp.Core.Utility;
 using SFML.Graphics;
 using SFML.System;
@@ -13,9 +15,9 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
 {
     private readonly PhysicsManager _physicsManager = physicsManager;
 
-    private List<Shape> _shapesToRender = new List<Shape>();
-    private List<Vertex[]> _lineShapesToRender = new List<Vertex[]>();
-    private List<Vertex[]> _linesToRender = new List<Vertex[]>();
+    private readonly List<Shape> _shapesToRender = new List<Shape>();
+    private readonly List<Vertex[]> _lineShapesToRender = new List<Vertex[]>();
+    private readonly List<Vertex[]> _linesToRender = new List<Vertex[]>();
     
     public void RunVisualization()
     {
@@ -52,7 +54,8 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
         _linesToRender.Clear();
         
         List<PhysicsObject> physicsObjects =  _physicsManager.GetPhysicsObjects();
-
+        List<CollisionManifold> manifolds = _physicsManager.Manifolds;
+        
         if (PhysiXVisualizer.ShowCollisionShapes)
             GenerateCollisionShapes(physicsObjects);
         if (PhysiXVisualizer.ShowBoundingBoxes)
@@ -61,6 +64,8 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
             GeneratePhysicsOrigins(physicsObjects);
         if (PhysiXVisualizer.ShowEdgeNormals)
             GenerateNormals(physicsObjects);
+        if (PhysiXVisualizer.ShowCollisionContactPoints)
+            GenerateContactPoints(_physicsManager.Manifolds);
     }
 
     private void GenerateCollisionShapes(List<PhysicsObject> physicsObjects)
@@ -105,13 +110,14 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
             if (po.Collider == null)
                 continue;
 
-            AABB aabb = po.Collider.AxisAlignedBoundingBox;
-            _shapesToRender.Add(new RectangleShape(new Vector2f((float) aabb.Size.x, (float) aabb.Size.y))
+            AABB aabb = po.Collider.AxisAlignedBoundingBox; 
+            Vector size = new Vector(aabb.Max.x - aabb.Min.x, aabb.Max.y - aabb.Min.y);
+            _shapesToRender.Add(new RectangleShape(new Vector2f((float) size.x, (float) size.y))
             {
                 FillColor = new Color(0, 0, 0, 0),
                 OutlineColor = Color.Magenta,
                 OutlineThickness = 1,
-                Position = new Vector2f((float) aabb.Origin.x, (float) aabb.Origin.y)
+                Position = new Vector2f((float) (po.Position.x + aabb.Min.x), (float) (po.Position.y + aabb.Min.y))
             });
         }
     }
@@ -146,6 +152,21 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
                     line[1] = new Vertex(new Vector2f((float)(point.x + normals[i].x * 12d), (float)(point.y + normals[i].y * 12d)), Color.Green);
                     _linesToRender.Add(line);
                 }
+            }
+        }
+    }
+
+    public void GenerateContactPoints(List<CollisionManifold> manifolds)
+    {
+        foreach (CollisionManifold manifold in manifolds)
+        {
+            foreach (Vector contactPoint in manifold.ContactPoints)
+            {
+                _shapesToRender.Add(new CircleShape(2f)
+                {
+                    FillColor = Color.Yellow,
+                    Position = new Vector2f((float) contactPoint.x - 1f, (float) contactPoint.y - 1f)
+                });
             }
         }
     }

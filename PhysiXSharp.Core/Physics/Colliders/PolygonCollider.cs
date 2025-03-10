@@ -37,10 +37,10 @@ public class PolygonCollider : Collider
                 largestY = vertex.y;
         }
 
-        Vector origin = Position + new Vector(smallestX, smallestY);
-        Vector size = new Vector(largestX - smallestX, largestY - smallestY);
+        Vector min =  new Vector(smallestX, smallestY);
+        Vector max = new Vector(largestX, largestY);
 
-        AABB aabb = new AABB(origin, size);
+        AABB aabb = new AABB(min, max);
         AxisAlignedBoundingBox = aabb;
     }
     
@@ -80,24 +80,6 @@ public class PolygonCollider : Collider
             normals.Add(edge.Normal());
         }
         Normals = normals;
-    }
-
-    internal Vector ClosestVertexToPoint(Vector point)
-    {
-        Vector closest = Position + Vertices[0];
-        double minDist = Vector.DistanceSquared(closest, point);
-
-        foreach (Vector vertex in Vertices)
-        {
-            double dist = Vector.DistanceSquared(Position + vertex, point);
-            if (dist < minDist)
-            {
-                minDist = dist;
-                closest = vertex;
-            }
-        }
-
-        return closest;
     }
     
     public Vector GetPolygonCentroid()

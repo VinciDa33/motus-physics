@@ -13,10 +13,11 @@ public class CircleCollider : Collider
 
     internal sealed override void CalculateAABB ()
     {
-        Vector origin = new Vector(Position.x - Radius, Position.y - Radius);
-        Vector size = new Vector(Radius * 2d, Radius * 2d);
+        Vector min = new Vector(-Radius,-Radius);
+        Vector max = new Vector(Radius, Radius);
 
-        AxisAlignedBoundingBox = new AABB(origin, size);
+        AABB aabb = new AABB(min, max);
+        AxisAlignedBoundingBox = aabb;
     }
 
     internal override void Rotate(float degrees)

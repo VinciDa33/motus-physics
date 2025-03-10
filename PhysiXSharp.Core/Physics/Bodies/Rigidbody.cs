@@ -1,49 +1,50 @@
 ﻿using PhysiXSharp.Core.Utility;
 
-namespace PhysiXSharp.Core.Physics;
+namespace PhysiXSharp.Core.Physics.Bodies;
 
-public abstract class Rigidbody : PhysicsObject
+public sealed class Rigidbody : PhysicsObject
 {
     private Vector Velocity { get; set; } = new Vector(0d, 0d);
     private float AngularVelocity { get; set; } = 0f;
     private double _mass = 1d;
     private Vector _gravity = new Vector(0d, 0d);
-    public Rigidbody()
+    public Rigidbody(Vector position)
     {
         IsStatic = false;
+        Position = position;
         PhysicsManager.Instance.AddRigidbody(this);
     }
     
-    public Rigidbody(double mass)
+    public Rigidbody(Vector position, float rotation)
     {
         IsStatic = false;
+        Position = position;
+        Rotation = rotation;
         PhysicsManager.Instance.AddRigidbody(this);
-        _mass = mass;
     }
     
-    public Rigidbody(double mass, Vector gravity)
+    public Rigidbody(Vector position, double mass)
     {
         IsStatic = false;
-        PhysicsManager.Instance.AddRigidbody(this);
+        Position = position;
         _mass = mass;
-        _gravity = gravity;
+        PhysicsManager.Instance.AddRigidbody(this);
     }
     
-    public Rigidbody(Vector velocity, float angularVelocity, double mass, Vector gravity)
+    public Rigidbody(Vector position, float rotation, double mass)
     {
         IsStatic = false;
-        PhysicsManager.Instance.AddRigidbody(this);
-        Velocity = velocity;
-        AngularVelocity = angularVelocity;
+        Position = position;
+        Rotation = rotation;
         _mass = mass;
-        _gravity = gravity;
+        PhysicsManager.Instance.AddRigidbody(this);
     }
 
-    public void Update()
+    internal void Update()
     {
-        TranslatePosition(Velocity * PhysiX.FixedDeltaTime);
-        Rotate((float) (AngularVelocity * PhysiX.FixedDeltaTime));
-        Velocity += _gravity * PhysiX.FixedDeltaTime;
+        TranslatePosition(Velocity * PhysiX.Time.FixedTimeStep);
+        Rotate((float) (AngularVelocity * PhysiX.Time.FixedTimeStep));
+        Velocity += _gravity * PhysiX.Time.FixedTimeStep;
         
         Collider?.SetRotation(Rotation);
     }

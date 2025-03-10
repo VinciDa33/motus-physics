@@ -1,48 +1,59 @@
-﻿
-
+﻿using PhysiXSharp.Core.Physics.Bodies;
 using PhysiXSharp.Core.Physics.Colliders;
+using PhysiXSharp.Core.Physics.Data;
 using PhysiXSharp.Core.Utility;
 
-namespace PhysiXSharp.Core.Physics;
+namespace PhysiXSharp.Core.Physics.Collision;
 
 public class SATCollisionDetector : ICollisionDetector
 {
-    public bool CheckCollision(PhysicsObject po1, PhysicsObject po2, out CollisionData data)
+    public bool CheckCollision(PhysicsObject po1, PhysicsObject po2, out CollisionManifold? manifold)
     {
+        manifold = null;
+        
         //Skip if an object is missing a collider
         if (po1.Collider == null || po2.Collider == null)
-        {
-            data = new CollisionData(po1, po2, false);
             return false;
-        }
+  
         //Check AABB overlap and skip if no overlap is found
         if (!Collider.OverlapAABB(po1.Collider, po2.Collider))
-        {
-            data = new CollisionData(po1, po2, false);
             return false;
-        }
         
         //Check convex collision precisely
         bool isColliding = CheckSAT(po1, po2, out Vector normal, out double depth);
         if (!isColliding)
-        {
-            data = new CollisionData(po1, po2, false);
             return false;
+
+        //TODO: Move somewhere else
+        Vector correction = normal * depth;
+        if (po1.IsStatic)
+        {
+            ((Rigidbody) po2).TranslatePosition(correction);
         }
-
-        data = new CollisionData(po1, po2, true);
-        data.CollisionNormal = normal;
-        data.PenetrationDepth = depth;
+        else if (po2.IsStatic)
+        {
+            ((Rigidbody) po1).TranslatePosition(-correction);
+        }
+        else
+        {
+            ((Rigidbody) po1).TranslatePosition(-correction / 2d);
+            ((Rigidbody) po2).TranslatePosition(correction / 2d);
+        }
         
-        //Return with this data if a collider is a trigger area
-        if (po1.Collider.IsTrigger || po2.Collider.IsTrigger)
-            return true;
-
+        Vector[] contactPoints = ContactPointFinder.FindContactPoints(po1.Collider, po2.Collider);
+        manifold = new CollisionManifold(po1, po2, normal, depth, contactPoints);
         return true;
     }
 
     private bool CheckSAT(PhysicsObject po1, PhysicsObject po2, out Vector normal, out double depth)
     {
+        normal = Vector.Zero;
+        depth = 0d;
+        
+        //Circle circle collision
+        if (po1.Collider is CircleCollider c1 && po2.Collider is CircleCollider c2)
+            return SATCircleCircle(c1, c2, out normal, out depth);
+        
         //Circle polygon collision
         if (po1.Collider is CircleCollider circle1 && po2.Collider is PolygonCollider poly1)
             return SATCirclePolygon(circle1, poly1, out normal, out depth, false);
@@ -50,18 +61,12 @@ public class SATCollisionDetector : ICollisionDetector
         //Circle polygon collision
         if (po1.Collider is PolygonCollider poly2 && po2.Collider is CircleCollider circle2)
             return SATCirclePolygon(circle2, poly2, out normal, out depth, true);
-        
-        //Circle circle collision
-        if (po1.Collider is CircleCollider c1 && po2.Collider is CircleCollider c2)
-            return SATCircleCircle(c1, c2, out normal, out depth);
 
         //Polygon polygon collision
         if (po1.Collider is PolygonCollider p1 && po2.Collider is PolygonCollider p2)
             return SATPolygonPolygon(p1, p2, out normal, out depth);
-
-        normal = Vector.Zero;
-        depth = 0d;
-        return true;
+        
+        return false;
     }
 
     private bool SATPolygonPolygon(PolygonCollider p1, PolygonCollider p2, out Vector normal, out double depth)
@@ -106,7 +111,7 @@ public class SATCollisionDetector : ICollisionDetector
 
         List<Vector> axes = new List<Vector>();
         axes.AddRange(p.Normals);
-        Vector closestVertex = p.ClosestVertexToPoint(c.Position);
+        Vector closestVertex = ClosestVertexToPoint(p, c.Position);
         axes.Add((c.Position - closestVertex).Normalized());
         
         foreach (Vector axis in axes)
@@ -174,6 +179,24 @@ public class SATCollisionDetector : ICollisionDetector
         }
 
         return (min, max);
+    }
+    
+    internal Vector ClosestVertexToPoint(PolygonCollider p, Vector point)
+    {
+        Vector closest = p.Position + p.Vertices[0];
+        double minDist = Vector.DistanceSquared(closest, point);
+
+        foreach (Vector vertex in p.Vertices)
+        {
+            double dist = Vector.DistanceSquared(p.Position + vertex, point);
+            if (dist < minDist)
+            {
+                minDist = dist;
+                closest = vertex;
+            }
+        }
+
+        return closest;
     }
     
 }

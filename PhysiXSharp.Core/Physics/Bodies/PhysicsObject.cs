@@ -1,7 +1,7 @@
 ﻿using PhysiXSharp.Core.Physics.Colliders;
 using PhysiXSharp.Core.Utility;
 
-namespace PhysiXSharp.Core.Physics;
+namespace PhysiXSharp.Core.Physics.Bodies;
 
 public abstract class PhysicsObject
 {
@@ -30,6 +30,11 @@ public abstract class PhysicsObject
         Collider.SetPhysicsObject(this);
         if (Rotation != 0)
             Collider.SetRotation(Rotation);
+    }
+
+    public void RemoveCollider()
+    {
+        Collider = null;
     }
     
     public void Destroy()
