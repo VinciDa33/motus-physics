@@ -23,8 +23,6 @@ public abstract class Collider
     internal abstract void Rotate(float degrees);
 
     internal abstract void SetRotation(float degrees);
-
-    internal abstract (double min, double max) Project(Vector axis);
     
     /// <summary>
     /// Returns true if the axis aligned bounding boxes of the two colliders are overlapping

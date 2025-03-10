@@ -132,16 +132,20 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
     {
         foreach (PhysicsObject po in physicsObjects)
         {
-            if (po.Collider == null)
-                continue;
-
-            List<Vector> normals = po.Collider.Normals;
-            foreach (Vector normal in normals)
+            if (po.Collider is PolygonCollider pc)
             {
-                Vertex[] line = new Vertex[2];
-                line[0] = new Vertex(new Vector2f((float)po.Position.x, (float)po.Position.y), Color.Green);
-                line[1] = new Vertex(new Vector2f((float) (po.Position.x + normal.x * 12d), (float) (po.Position.y + normal.y * 12d)), Color.Green);
-                _linesToRender.Add(line);
+                List<Vector> normals = new List<Vector>(pc.Normals);
+                for (int i = 0; i < normals.Count; i++)
+                {
+                    Vector vertex1 = pc.Vertices[i];
+                    Vector vertex2 = i + 1 >= pc.Vertices.Count ? pc.Vertices[0] : pc.Vertices[i + 1];
+                    Vector point = pc.Position + vertex1 + (vertex2 - vertex1) * 0.5d;
+                    
+                    Vertex[] line = new Vertex[2];
+                    line[0] = new Vertex(new Vector2f((float)point.x, (float)point.y), Color.Green);
+                    line[1] = new Vertex(new Vector2f((float)(point.x + normals[i].x * 12d), (float)(point.y + normals[i].y * 12d)), Color.Green);
+                    _linesToRender.Add(line);
+                }
             }
         }
     }

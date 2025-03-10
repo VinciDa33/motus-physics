@@ -28,8 +28,8 @@ public abstract class PhysicsObject
     {
         Collider = collider;
         Collider.SetPhysicsObject(this);
-        //Collider.CalculateAABB();
-        Collider.SetRotation(Rotation);
+        if (Rotation != 0)
+            Collider.SetRotation(Rotation);
     }
     
     public void Destroy()

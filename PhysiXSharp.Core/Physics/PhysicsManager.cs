@@ -1,4 +1,5 @@
-﻿using PhysiXSharp.Core.Utility;
+﻿using PhysiXSharp.Core.Physics.Colliders;
+using PhysiXSharp.Core.Utility;
 
 namespace PhysiXSharp.Core.Physics;
 
@@ -62,38 +63,45 @@ public class PhysicsManager
         {
             rigidbody.Update();
         }
-        foreach (Rigidbody rigidbody in _rigidbodies)
+        
+        for (int i = 0; i < _physicsObjects.Count; i++)
         {
-            foreach (PhysicsObject physicsObject in _physicsObjects)
+            for (int j = i + 1; j < _physicsObjects.Count; j++)
             {
-                if (rigidbody.Id == physicsObject.Id)
+                if (_physicsObjects[i] is not Rigidbody && _physicsObjects[j] is not Rigidbody)
                     continue;
-                _collisionDetector.CheckCollision(rigidbody, physicsObject, out CollisionData data);
-                //if (data.Colliding)
-                //    SeparateBodies(data.PhysicsObject1, data.PhysicsObject2, data.CollisionNormal * data.PenetrationDepth);
+                
+                //if (rigidbody.Id == physicsObject.Id)
+                //    continue;
+                _collisionDetector.CheckCollision(_physicsObjects[i], _physicsObjects[j], out CollisionData data);
+                if (data.Colliding)
+                {
+                    //rigidbody.SetVelocity(Vector.Zero);
+                    //Console.WriteLine(data.CollisionNormal);
+                    SeparateBodies(data.PhysicsObject1, data.PhysicsObject2, data.CollisionNormal * data.PenetrationDepth);
+                }
                 //bool result = SAT.DoCollision(rigidbody, physicsObject);
                 //Console.WriteLine(result);
-                if (data.Colliding)
-                    Console.WriteLine("Collision! Object [" + rigidbody.Id + "] and [" + physicsObject.Id + "]");
+                //if (data.Colliding)
+                //    Console.WriteLine("Collision! Object [" + rigidbody.Id + "] and [" + physicsObject.Id + "]");
             }
         }
     }
 
-    private void SeparateBodies(PhysicsObject bodyA, PhysicsObject bodyB, Vector mtv)
+    private void SeparateBodies(PhysicsObject bodyA, PhysicsObject bodyB, Vector correction)
     {
-        Console.WriteLine(mtv);
         if (bodyA.IsStatic)
         {
-            ((Rigidbody) bodyB).TranslatePosition(mtv);
+            ((Rigidbody) bodyB).TranslatePosition(correction);
         }
         else if (bodyB.IsStatic)
         {
-            ((Rigidbody) bodyA).TranslatePosition(mtv);
+            ((Rigidbody) bodyA).TranslatePosition(-correction);
         }
         else
         {
-            ((Rigidbody) bodyA).TranslatePosition(-mtv / 2d);
-            ((Rigidbody) bodyB).TranslatePosition(mtv / 2d);
+            ((Rigidbody) bodyA).TranslatePosition(-correction / 2d);
+            ((Rigidbody) bodyB).TranslatePosition(correction / 2d);
         }
     }
     

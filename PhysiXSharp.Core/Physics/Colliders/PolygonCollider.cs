@@ -70,21 +70,6 @@ public class PolygonCollider : Collider
         Rotate(degrees);
     }
 
-    internal override (double min, double max) Project(Vector axis)
-    {
-        double min = Vector.Dot(Position + Vertices[0], axis);
-        double max = min;
-
-        foreach (Vector vertex in Vertices)
-        {
-            double projection = Vector.Dot(Position + vertex, axis);
-            if (projection > max) max = projection;
-            if (projection < min) min = projection;
-        }
-
-        return (min, max);
-    }
-
     internal override void CalculateNormals()
     {
         List<Vector> normals = new List<Vector>();
@@ -113,5 +98,12 @@ public class PolygonCollider : Collider
         }
 
         return closest;
+    }
+    
+    public Vector GetPolygonCentroid()
+    {
+        Vector sum = Vector.Zero;
+        foreach (Vector vertex in Vertices) sum += vertex;
+        return sum / Vertices.Count;
     }
 }

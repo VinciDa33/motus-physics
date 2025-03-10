@@ -29,12 +29,6 @@ public class CircleCollider : Collider
         //No need to rotate a circle
     }
 
-    internal override (double min, double max) Project(Vector axis)
-    {
-        double centerProjection = Vector.Dot(Position, axis);
-        return (centerProjection - Radius, centerProjection + Radius);
-    }
-
     internal override void CalculateNormals()
     {
         Normals = new List<Vector>();

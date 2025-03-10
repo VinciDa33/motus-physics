@@ -3,6 +3,7 @@ using PhysiXSharp.Core.Utility;
 
 namespace PhysiXSharp.Core.Physics;
 
+#if false
 public class SAT
 {
     public static bool DoCollision(PhysicsObject po1, PhysicsObject po2)
@@ -44,3 +45,5 @@ public class SAT
         return true; // No separating axis found, collision detected
     }
 }
+
+#endif

@@ -43,15 +43,19 @@ public class SATCollisionDetector : ICollisionDetector
 
     private bool CheckSAT(PhysicsObject po1, PhysicsObject po2, out Vector normal, out double depth)
     {
+        //Circle polygon collision
         if (po1.Collider is CircleCollider circle1 && po2.Collider is PolygonCollider poly1)
-            return SATCirclePolygon(circle1, poly1, out normal, out depth);
+            return SATCirclePolygon(circle1, poly1, out normal, out depth, false);
 
+        //Circle polygon collision
         if (po1.Collider is PolygonCollider poly2 && po2.Collider is CircleCollider circle2)
-            return SATCirclePolygon(circle2, poly2, out normal, out depth);
+            return SATCirclePolygon(circle2, poly2, out normal, out depth, true);
         
+        //Circle circle collision
         if (po1.Collider is CircleCollider c1 && po2.Collider is CircleCollider c2)
             return SATCircleCircle(c1, c2, out normal, out depth);
 
+        //Polygon polygon collision
         if (po1.Collider is PolygonCollider p1 && po2.Collider is PolygonCollider p2)
             return SATPolygonPolygon(p1, p2, out normal, out depth);
 
@@ -71,8 +75,8 @@ public class SATCollisionDetector : ICollisionDetector
         
         foreach (Vector axis in axes)
         {
-            (double min1, double max1) = p1.Project(axis);
-            (double min2, double max2) = p2.Project(axis);
+            (double min1, double max1) = ProjectPolygonOnAxis(p1, axis);
+            (double min2, double max2) = ProjectPolygonOnAxis(p2, axis);
             
             if (max1 < min2 || max2 < min1)
                 return false; // Separating axis found, no collision
@@ -92,11 +96,10 @@ public class SATCollisionDetector : ICollisionDetector
         {
             normal = -normal;
         }
-
         return true;
     }
 
-    private bool SATCirclePolygon(CircleCollider c, PolygonCollider p, out Vector normal, out double depth)
+    private bool SATCirclePolygon(CircleCollider c, PolygonCollider p, out Vector normal, out double depth, bool inverse)
     {
         normal = Vector.Zero;
         depth = double.MaxValue;
@@ -104,32 +107,33 @@ public class SATCollisionDetector : ICollisionDetector
         List<Vector> axes = new List<Vector>();
         axes.AddRange(p.Normals);
         Vector closestVertex = p.ClosestVertexToPoint(c.Position);
-        axes.Add((closestVertex - c.Position).Normalized());
+        axes.Add((c.Position - closestVertex).Normalized());
         
         foreach (Vector axis in axes)
         {
-            (double min1, double max1) = p.Project(axis);
-            (double min2, double max2) = c.Project(axis);
+            (double min1, double max1) = ProjectPolygonOnAxis(p, axis);
+            (double min2, double max2) = ProjectCircleOnAxis(c, axis);
             
             if (max1 < min2 || max2 < min1)
                 return false; // Separating axis found, no collision
             
             double axisDepth = Math.Min(max2 - min1, max1 - min2);
-
+            
             if (axisDepth < depth)
             {
                 depth = axisDepth;
                 normal = axis;
             }
         }
-
-        Vector direction = p.Position - c.Position;
-
         
-        if (Vector.Dot(direction, normal) < 0f)
+        Vector direction = c.Position - p.Position;
+        if (Vector.Dot(normal, direction) > 0)
         {
             normal = -normal;
         }
+
+        if (inverse)
+            normal = -normal;
 
         return true;
     }
@@ -151,10 +155,25 @@ public class SATCollisionDetector : ICollisionDetector
         return true;
     }
 
-    
-    private void FindContactPoints(CollisionData data)
+    private (double min, double max) ProjectCircleOnAxis(CircleCollider c, Vector axis)
     {
-        
+        double centerProjection = Vector.Dot(c.Position, axis);
+        return (centerProjection - c.Radius, centerProjection + c.Radius);
+    }
+
+    private (double min, double max) ProjectPolygonOnAxis(PolygonCollider p, Vector axis)
+    {
+        double min = Vector.Dot(p.Position + p.Vertices[0], axis);
+        double max = min;
+
+        for (int i = 1; i < p.Vertices.Count; i++)
+        {
+            double projection = Vector.Dot(p.Position + p.Vertices[i], axis);
+            if (projection < min) min = projection;
+            if (projection > max) max = projection;
+        }
+
+        return (min, max);
     }
     
 }

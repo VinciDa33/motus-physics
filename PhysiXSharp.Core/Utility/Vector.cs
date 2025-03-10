@@ -21,9 +21,7 @@ public class Vector : ICloneable
     public static Vector operator *(double d, Vector v1) => new Vector(v1.x * d, v1.y * d);
 
     public static Vector operator /(Vector v1, double d) => new Vector(v1.x / d, v1.y / d);
-
-    public static bool operator ==(Vector v1, Vector v2) => v1.x == v2.x && v1.y == v2.y;
-    public static bool operator !=(Vector v1, Vector v2) => v1.x != v2.x || v1.y != v2.y;
+    
     
     public double Magnitude() {
         return Math.Sqrt(x * x + y * y);
@@ -102,7 +100,7 @@ public class Vector : ICloneable
     
     public static double Dot(Vector v1, Vector v2)
     {
-        return v1.x * v2.y - v1.y * v2.x;
+        return v1.x * v2.x + v1.y * v2.y;
     }
 
     public override string ToString()
