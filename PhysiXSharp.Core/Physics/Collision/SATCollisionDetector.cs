@@ -7,9 +7,9 @@ namespace PhysiXSharp.Core.Physics.Collision;
 
 public class SATCollisionDetector : ICollisionDetector
 {
-    public bool CheckCollision(PhysicsObject po1, PhysicsObject po2, out CollisionManifold? manifold)
+    public bool CheckCollision(PhysicsObject po1, PhysicsObject po2, out CollisionEvent? collisionEvent)
     {
-        manifold = null;
+        collisionEvent = null;
         
         //Skip if an object is missing a collider
         if (po1.Collider == null || po2.Collider == null)
@@ -23,25 +23,8 @@ public class SATCollisionDetector : ICollisionDetector
         bool isColliding = CheckSAT(po1, po2, out Vector normal, out double depth);
         if (!isColliding)
             return false;
-
-        //TODO: Move somewhere else
-        Vector correction = normal * depth;
-        if (po1.IsStatic)
-        {
-            ((Rigidbody) po2).TranslatePosition(correction);
-        }
-        else if (po2.IsStatic)
-        {
-            ((Rigidbody) po1).TranslatePosition(-correction);
-        }
-        else
-        {
-            ((Rigidbody) po1).TranslatePosition(-correction / 2d);
-            ((Rigidbody) po2).TranslatePosition(correction / 2d);
-        }
         
-        Vector[] contactPoints = ContactPointFinder.FindContactPoints(po1.Collider, po2.Collider);
-        manifold = new CollisionManifold(po1, po2, normal, depth, contactPoints);
+        collisionEvent = new CollisionEvent(po1, po2, normal, depth);
         return true;
     }
 
@@ -123,7 +106,6 @@ public class SATCollisionDetector : ICollisionDetector
                 return false; // Separating axis found, no collision
             
             double axisDepth = Math.Min(max2 - min1, max1 - min2);
-            
             if (axisDepth < depth)
             {
                 depth = axisDepth;
@@ -195,8 +177,8 @@ public class SATCollisionDetector : ICollisionDetector
                 closest = vertex;
             }
         }
-
-        return closest;
+        
+        return p.Position + closest;
     }
     
 }

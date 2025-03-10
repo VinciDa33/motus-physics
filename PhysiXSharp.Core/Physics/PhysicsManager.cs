@@ -25,6 +25,8 @@ public class PhysicsManager
     private PhysicsManager() {}
 
     private ICollisionDetector _collisionDetector = new SATCollisionDetector();
+    private ICollisionSolver _collisionSolver = new ImpulseSolver();
+    
     private int _physicsObjectIdTracker = 0;
     private readonly List<PhysicsObject> _physicsObjects = new List<PhysicsObject>();
     private readonly List<Rigidbody> _rigidbodies = new List<Rigidbody>();
@@ -71,6 +73,9 @@ public class PhysicsManager
         }
 
         List<CollisionManifold> newManifolds = new List<CollisionManifold>();
+        List<CollisionEvent> collisionEvents = new List<CollisionEvent>();
+        
+        //Obtain all collision events to be handled
         for (int i = 0; i < _physicsObjects.Count; i++)
         {
             for (int j = i + 1; j < _physicsObjects.Count; j++)
@@ -83,12 +88,20 @@ public class PhysicsManager
                 if (_physicsObjects[i] is not Rigidbody && _physicsObjects[j] is not Rigidbody)
                     continue;
                 
-                if (_collisionDetector.CheckCollision(_physicsObjects[i], _physicsObjects[j], out CollisionManifold? manifold))
-                {
-                    newManifolds.Add(manifold);
-                    //SeparateBodies(manifold.PhysicsObject1, manifold.PhysicsObject2, manifold.CollisionNormal * manifold.PenetrationDepth);
-                }
+                if (_collisionDetector.CheckCollision(_physicsObjects[i], _physicsObjects[j], out CollisionEvent? collisionEvent))
+                    collisionEvents.Add(collisionEvent);
             }
+        }
+
+        //Separate out overlapping colliders
+        foreach (CollisionEvent collisionEvent in collisionEvents)
+            CollisionSeparator.SeparateCollisionBodies(collisionEvent.PhysicsObject1, collisionEvent.PhysicsObject2, collisionEvent.CollisionNormal, collisionEvent.PenetrationDepth);
+
+        //Find contact points of each collision
+        foreach (CollisionEvent collisionEvent in collisionEvents)
+        {
+            Vector[] contactPoints = ContactPointFinder.FindContactPoints(collisionEvent.PhysicsObject1.Collider, collisionEvent.PhysicsObject2.Collider);
+            newManifolds.Add(new CollisionManifold(collisionEvent, contactPoints));
         }
 
         Manifolds = newManifolds;

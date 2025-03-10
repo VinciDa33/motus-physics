@@ -13,6 +13,7 @@ class Program
         PhysiX.SetModulePath("../../../../TestRunner/bin/Debug/net8.0");
         PhysiX.Initialize();
 
+        
         Staticbody sb1 = new Staticbody(new Vector(200, 500), 40f);
         sb1.AddCollider(new CircleCollider(50));
         
@@ -34,7 +35,8 @@ class Program
             new Vector(-30, -25),
             new Vector(-45, 35),
         ]));
-
+        
+        
         Rigidbody rb1 = new Rigidbody(new Vector(200, 300), 25d);
         rb1.AddCollider(new CircleCollider(25d));
         rb1.SetVelocity(new Vector(0, 100d));
@@ -62,10 +64,10 @@ class Program
         rb4.SetVelocity(new Vector(0, 35d));
         
         Rigidbody rb5 = new Rigidbody(new Vector(550, -150), 45d);
-        rb5.AddCollider(new CircleCollider(15d));
+        rb5.AddCollider(new CircleCollider(20d));
         rb5.SetVelocity(new Vector(0, 60d));
         
-      
+        
         while (PhysiXVisualizer.IsVisualizerActive())
         {
             //Keep running program until visualizer thread dies
