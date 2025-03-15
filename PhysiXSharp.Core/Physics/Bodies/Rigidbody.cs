@@ -42,9 +42,9 @@ public sealed class Rigidbody : PhysicsObject
 
     internal void Update()
     {
-        TranslatePosition(Velocity * PhysiX.Time.FixedTimeStep);
-        Rotate((float) (AngularVelocity * PhysiX.Time.FixedTimeStep));
-        Velocity += _gravity * PhysiX.Time.FixedTimeStep;
+        TranslatePosition(Velocity * PhysiX.Time.FixedTimeStep * PhysiX.Time.TimeScale);
+        Rotate((float) (AngularVelocity * PhysiX.Time.FixedTimeStep * PhysiX.Time.TimeScale));
+        Velocity += _gravity * PhysiX.Time.FixedTimeStep * PhysiX.Time.TimeScale;
         
         Collider?.SetRotation(Rotation);
     }

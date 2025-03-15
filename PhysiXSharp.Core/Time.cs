@@ -3,6 +3,13 @@
 public class Time
 {
     /// <summary>
+    /// The simulation timescale.
+    /// Change this value to speed up, or slow down the simulation.
+    /// Large values will have an effect on the robustness of the simulation.
+    /// </summary>
+    public double TimeScale = 1.0d;
+    
+    /// <summary>
     /// Time in seconds since PhysiX Sharp was initialized.
     /// </summary>
     public double ElapsedTime { get; internal set; }
