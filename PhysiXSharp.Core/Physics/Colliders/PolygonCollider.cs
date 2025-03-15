@@ -5,7 +5,7 @@ namespace PhysiXSharp.Core.Physics.Colliders;
 
 public class PolygonCollider : Collider
 {
-    private List<Vector> _baseVertices;
+    private readonly Vector[] _baseVertices;
     public List<Vector> Vertices { get; private set;  } = new List<Vector>();
     
     public PolygonCollider(params Vector[] points)
@@ -13,7 +13,7 @@ public class PolygonCollider : Collider
         if (points.Length < 3)
             PhysiX.Logger.LogError("Polygon collider must have 3 or more points!");
         
-        _baseVertices = points.ToList();
+        _baseVertices = points;
         foreach(Vector vertex in _baseVertices)
             Vertices.Add((Vector) vertex.Clone());
     }
