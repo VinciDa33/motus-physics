@@ -82,4 +82,10 @@ public sealed class Rigidbody : PhysicsObject
     {
         AngularVelocity = angularVelocity;
     }
+
+    public override void Destroy()
+    {
+        base.Destroy();
+        PhysicsManager.Instance.RemoveRigidbody(this);
+    }
 }

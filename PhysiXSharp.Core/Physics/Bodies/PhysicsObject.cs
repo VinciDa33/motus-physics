@@ -37,7 +37,7 @@ public abstract class PhysicsObject
         Collider = null;
     }
     
-    public void Destroy()
+    public virtual void Destroy()
     {
         PhysicsManager.Instance.RemovePhysicsObject(this);
     }

@@ -30,26 +30,33 @@ public class PhysicsManager
     private int _physicsObjectIdTracker = 0;
     private readonly List<PhysicsObject> _physicsObjects = new List<PhysicsObject>();
     private readonly List<Rigidbody> _rigidbodies = new List<Rigidbody>();
+    
+    //Buffers
+    private readonly List<PhysicsObject> _newPhysicsObjectsBuffer = new List<PhysicsObject>();
+    private readonly List<PhysicsObject> _removePhysicsObjectsBuffer = new List<PhysicsObject>();
+    private readonly List<Rigidbody> _newRigidbodyBuffer = new List<Rigidbody>();
+    private readonly List<Rigidbody> _removeRigidbodyBuffer = new List<Rigidbody>();
+    
     public List<CollisionManifold> Manifolds { get; private set; } = new List<CollisionManifold>();
     
     public void AddPhysicsObject(PhysicsObject physicsObject)
     {
-        _physicsObjects.Add(physicsObject);
+        _newPhysicsObjectsBuffer.Add(physicsObject);
     }
 
     public void RemovePhysicsObject(PhysicsObject physicsObject)
     {
-        _physicsObjects.Remove(physicsObject);
+        _removePhysicsObjectsBuffer.Remove(physicsObject);
     }
 
     public void AddRigidbody(Rigidbody rigidbody)
     {
-        _rigidbodies.Add(rigidbody);
+        _newRigidbodyBuffer.Add(rigidbody);
     }
 
     public void RemoveRigidbody(Rigidbody rigidbody)
     {
-        _rigidbodies.Remove(rigidbody);
+        _removeRigidbodyBuffer.Remove(rigidbody);
     }
 
     public List<PhysicsObject> GetPhysicsObjects()
@@ -65,6 +72,8 @@ public class PhysicsManager
 
     public void Update()
     {
+        HandleBuffers();
+        
         foreach (Rigidbody rigidbody in _rigidbodies)
         {
             if (!rigidbody.IsActive)
@@ -105,5 +114,28 @@ public class PhysicsManager
         }
 
         Manifolds = newManifolds;
+    }
+
+    private void HandleBuffers()
+    {
+        List<PhysicsObject> newObjects = new List<PhysicsObject>(_newPhysicsObjectsBuffer);
+        List<PhysicsObject> removeObjects = new List<PhysicsObject>(_removePhysicsObjectsBuffer);
+        
+        _physicsObjects.AddRange(newObjects);
+        _physicsObjects.RemoveRange(removeObjects);
+        
+        //Remove objects that have been handled from the buffers
+        _newPhysicsObjectsBuffer.RemoveRange(newObjects);
+        _removePhysicsObjectsBuffer.RemoveRange(removeObjects);
+
+        List<Rigidbody> newRigids = new List<Rigidbody>(_newRigidbodyBuffer);
+        List<Rigidbody> removeRigids = new List<Rigidbody>(_removeRigidbodyBuffer);
+
+        _rigidbodies.AddRange(newRigids);
+        _rigidbodies.RemoveRange(removeRigids);
+        
+        //Remove rigidbodies that have been handled from the buffers
+        _newRigidbodyBuffer.RemoveRange(newRigids);
+        _removeRigidbodyBuffer.RemoveRange(removeRigids);
     }
 }
