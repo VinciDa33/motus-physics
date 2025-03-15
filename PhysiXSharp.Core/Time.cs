@@ -8,6 +8,11 @@ public class Time
     /// Large values will have an effect on the robustness of the simulation.
     /// </summary>
     public double TimeScale = 1.0d;
+
+    /// <summary>
+    /// The number of simulation steps that have been run so far
+    /// </summary>
+    public int SimStep { get; internal set; } = 0;
     
     /// <summary>
     /// Time in seconds since PhysiX Sharp was initialized.

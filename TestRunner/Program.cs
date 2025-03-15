@@ -67,6 +67,8 @@ class Program
         rb5.AddCollider(new CircleCollider(20d));
         rb5.SetVelocity(new Vector(0, 60d));
         
+        rb2.OnCollisionEnterSubscribe(manifold => {Console.WriteLine("Enter! " + manifold.PhysicsObject1.Id + " : " + manifold.PhysicsObject2.Id);});
+        rb2.OnCollisionExitSubscribe(manifold => {Console.WriteLine("Exit! " + manifold.PhysicsObject1.Id + " : " + manifold.PhysicsObject2.Id);});
         
         while (PhysiXVisualizer.IsVisualizerActive())
         {

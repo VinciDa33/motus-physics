@@ -68,6 +68,7 @@ public static class PhysiX
                 Time.FixedDeltaTime = FixedDeltaStopwatch.Elapsed.TotalSeconds - _fixedSecondsElapsed;
                 _fixedSecondsElapsed += Time.FixedDeltaTime;
                 Step();
+                Time.SimStep++;
                 _deltaSum -= 1d / _physicsStepsPerSecond;
             }
         }

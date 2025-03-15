@@ -12,7 +12,6 @@ public sealed class Rigidbody : PhysicsObject
     {
         IsStatic = false;
         Position = position;
-        PhysicsManager.Instance.AddRigidbody(this);
     }
     
     public Rigidbody(Vector position, float rotation)
@@ -20,7 +19,6 @@ public sealed class Rigidbody : PhysicsObject
         IsStatic = false;
         Position = position;
         Rotation = rotation;
-        PhysicsManager.Instance.AddRigidbody(this);
     }
     
     public Rigidbody(Vector position, double mass)
@@ -28,7 +26,6 @@ public sealed class Rigidbody : PhysicsObject
         IsStatic = false;
         Position = position;
         _mass = mass;
-        PhysicsManager.Instance.AddRigidbody(this);
     }
     
     public Rigidbody(Vector position, float rotation, double mass)
@@ -37,11 +34,11 @@ public sealed class Rigidbody : PhysicsObject
         Position = position;
         Rotation = rotation;
         _mass = mass;
-        PhysicsManager.Instance.AddRigidbody(this);
     }
 
-    internal void Update()
+    internal override void Update()
     {
+        base.Update();
         TranslatePosition(Velocity * PhysiX.Time.FixedTimeStep * PhysiX.Time.TimeScale);
         Rotate((float) (AngularVelocity * PhysiX.Time.FixedTimeStep * PhysiX.Time.TimeScale));
         Velocity += _gravity * PhysiX.Time.FixedTimeStep * PhysiX.Time.TimeScale;
@@ -81,11 +78,5 @@ public sealed class Rigidbody : PhysicsObject
     public void SetAngularVelocity(float angularVelocity)
     {
         AngularVelocity = angularVelocity;
-    }
-
-    public override void Destroy()
-    {
-        base.Destroy();
-        PhysicsManager.Instance.RemoveRigidbody(this);
     }
 }

@@ -29,13 +29,9 @@ public class PhysicsManager
     
     private int _physicsObjectIdTracker = 0;
     private readonly List<PhysicsObject> _physicsObjects = new List<PhysicsObject>();
-    private readonly List<Rigidbody> _rigidbodies = new List<Rigidbody>();
-    
     //Buffers
     private readonly List<PhysicsObject> _newPhysicsObjectsBuffer = new List<PhysicsObject>();
     private readonly List<PhysicsObject> _removePhysicsObjectsBuffer = new List<PhysicsObject>();
-    private readonly List<Rigidbody> _newRigidbodyBuffer = new List<Rigidbody>();
-    private readonly List<Rigidbody> _removeRigidbodyBuffer = new List<Rigidbody>();
     
     public List<CollisionManifold> Manifolds { get; private set; } = new List<CollisionManifold>();
     
@@ -46,17 +42,7 @@ public class PhysicsManager
 
     public void RemovePhysicsObject(PhysicsObject physicsObject)
     {
-        _removePhysicsObjectsBuffer.Remove(physicsObject);
-    }
-
-    public void AddRigidbody(Rigidbody rigidbody)
-    {
-        _newRigidbodyBuffer.Add(rigidbody);
-    }
-
-    public void RemoveRigidbody(Rigidbody rigidbody)
-    {
-        _removeRigidbodyBuffer.Remove(rigidbody);
+        _removePhysicsObjectsBuffer.Add(physicsObject);
     }
 
     public List<PhysicsObject> GetPhysicsObjects()
@@ -74,11 +60,11 @@ public class PhysicsManager
     {
         HandleBuffers();
         
-        foreach (Rigidbody rigidbody in _rigidbodies)
+        foreach (PhysicsObject physicsObject in _physicsObjects)
         {
-            if (!rigidbody.IsActive)
+            if (!physicsObject.IsActive)
                 continue;
-            rigidbody.Update();
+            physicsObject.Update();
         }
 
         List<CollisionManifold> newManifolds = new List<CollisionManifold>();
@@ -110,10 +96,20 @@ public class PhysicsManager
         foreach (CollisionEvent collisionEvent in collisionEvents)
         {
             Vector[] contactPoints = ContactPointFinder.FindContactPoints(collisionEvent.PhysicsObject1.Collider, collisionEvent.PhysicsObject2.Collider);
-            newManifolds.Add(new CollisionManifold(collisionEvent, contactPoints));
+            CollisionManifold manifold = new CollisionManifold(collisionEvent, contactPoints, PhysiX.Time.SimStep);
+            newManifolds.Add(manifold);
+            manifold.PhysicsObject1.CollisionTrack(manifold);
+            manifold.PhysicsObject2.CollisionTrack(manifold);
         }
-
+        
         Manifolds = newManifolds;
+        
+        foreach (PhysicsObject physicsObject in _physicsObjects)
+        {
+            if (!physicsObject.IsActive)
+                continue;
+            physicsObject.LateUpdate();
+        }
     }
 
     private void HandleBuffers()
@@ -127,15 +123,5 @@ public class PhysicsManager
         //Remove objects that have been handled from the buffers
         _newPhysicsObjectsBuffer.RemoveRange(newObjects);
         _removePhysicsObjectsBuffer.RemoveRange(removeObjects);
-
-        List<Rigidbody> newRigids = new List<Rigidbody>(_newRigidbodyBuffer);
-        List<Rigidbody> removeRigids = new List<Rigidbody>(_removeRigidbodyBuffer);
-
-        _rigidbodies.AddRange(newRigids);
-        _rigidbodies.RemoveRange(removeRigids);
-        
-        //Remove rigidbodies that have been handled from the buffers
-        _newRigidbodyBuffer.RemoveRange(newRigids);
-        _removeRigidbodyBuffer.RemoveRange(removeRigids);
     }
 }
