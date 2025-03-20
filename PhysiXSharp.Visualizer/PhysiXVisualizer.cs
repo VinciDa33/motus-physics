@@ -15,10 +15,11 @@ public static class PhysiXVisualizer
     public static int PixelsPerMeter = 25;
 
     public static bool ShowCollisionShapes = true;
-    public static bool ShowBoundingBoxes = true;
+    public static bool ShowBoundingBoxes = false;
     public static bool ShowPhysicsObjectOrigins = true;
-    public static bool ShowEdgeNormals = true;
+    public static bool ShowEdgeNormals = false;
     public static bool ShowCollisionContactPoints = true;
+    public static bool ShowPolygonCentroids = false;
     
     public static bool IsVisualizerActive()
     {

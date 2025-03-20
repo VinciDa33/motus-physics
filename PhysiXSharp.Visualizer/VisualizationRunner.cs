@@ -66,7 +66,8 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
             GenerateNormals(rigidbodies);
         if (PhysiXVisualizer.ShowCollisionContactPoints)
             GenerateContactPoints(_physicsManager.Manifolds);
-        GeneratePolygonCentroid(rigidbodies);
+        if (PhysiXVisualizer.ShowPolygonCentroids)
+            GeneratePolygonCentroid(rigidbodies);
     }
 
     private void GenerateCollisionShapes(List<Rigidbody> rigidbodies)
@@ -177,7 +178,7 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
                 Vector centroid = pc.GetPolygonCentroid();
                 _shapesToRender.Add(new CircleShape(2f)
                 {
-                    FillColor = Color.Blue,
+                    FillColor = new Color(200, 140, 200),
                     Position = new Vector2f((float) (pc.Position.x + centroid.x), (float) (pc.Position.y + centroid.y)) * PhysiXVisualizer.PixelsPerMeter - new Vector2f(1, 1)
                 });
             }

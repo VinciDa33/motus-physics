@@ -63,7 +63,7 @@ public sealed class Rigidbody
     
     internal void Update()
     {
-        if (!IsActive)
+        if (!IsActive || IsStatic)
             return;
         
         TranslatePosition(Velocity * PhysiX.Time.FixedTimeStep * PhysiX.Time.TimeScale);

@@ -115,23 +115,23 @@ public class PhysicsManager
         
         Manifolds = newManifolds;
 
-        /*
+        
         List<CollisionResolution> resolutions = new List<CollisionResolution>();
         foreach (CollisionManifold manifold in Manifolds)
         {
-            ImpulseSolver.SolveCollision(manifold, out CollisionResolution resolution);
+            CollisionResolution resolution = ImpulseSolver.SolveCollision(manifold);
             resolutions.Add(resolution);
         }
 
         foreach (CollisionResolution resolution in resolutions)
         {
             resolution.RigidbodyA.AddVelocity(resolution.VelocityChangeA);
-            resolution.RigidbodyA.AddAngularVelocity(resolution.AngularVelocityChangeA);
+            //resolution.RigidbodyA.AddAngularVelocity(resolution.AngularVelocityChangeA);
             
             resolution.RigidbodyB.AddVelocity(resolution.VelocityChangeB);
-            resolution.RigidbodyB.AddAngularVelocity(resolution.AngularVelocityChangeB);
+            //resolution.RigidbodyB.AddAngularVelocity(resolution.AngularVelocityChangeB);
         }
-        */
+        
         
         foreach (Rigidbody rigidbody in _rigidbodies)
         {
