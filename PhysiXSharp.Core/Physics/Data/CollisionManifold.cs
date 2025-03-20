@@ -4,32 +4,32 @@ using PhysiXSharp.Core.Utility;
 
 namespace PhysiXSharp.Core.Physics.Data;
 
-public class CollisionManifold
+public sealed class CollisionManifold
 {
-    public readonly PhysicsObject PhysicsObject1;
-    public readonly PhysicsObject PhysicsObject2;
+    public readonly Rigidbody RigidbodyA;
+    public readonly Rigidbody RigidbodyB;
     public readonly Vector CollisionNormal;
     public readonly double PenetrationDepth;
     public readonly Vector[] ContactPoints;
-    public readonly int SimStepStamp;
+    public readonly int SimStep;
 
-    public CollisionManifold(PhysicsObject physicsObject1, PhysicsObject physicsObject2, Vector normal, double depth, Vector[] contactPoints, int simStepStamp)
+    public CollisionManifold(Rigidbody rigidbodyA, Rigidbody rigidbodyB, Vector collisionNormal, double penetrationDepth, Vector[] contactPoints, int simStep)
     {
-        PhysicsObject1 = physicsObject1;
-        PhysicsObject2 = physicsObject2;
-        CollisionNormal = normal;
-        PenetrationDepth = depth;
+        RigidbodyA = rigidbodyA;
+        RigidbodyB = rigidbodyB;
+        CollisionNormal = collisionNormal;
+        PenetrationDepth = penetrationDepth;
         ContactPoints = contactPoints;
-        SimStepStamp = simStepStamp;
+        SimStep = simStep;
     }
     
-    public CollisionManifold(CollisionEvent collisionEvent, Vector[] contactPoints, int simStepStamp) 
+    public CollisionManifold(CollisionEvent collisionEvent, Vector[] contactPoints, int simStep) 
     {
-        PhysicsObject1 = collisionEvent.PhysicsObject1;
-        PhysicsObject2 = collisionEvent.PhysicsObject2;
+        RigidbodyA = collisionEvent.RigidbodyA;
+        RigidbodyB = collisionEvent.RigidbodyB;
         CollisionNormal = collisionEvent.CollisionNormal;
         PenetrationDepth = collisionEvent.PenetrationDepth;
         ContactPoints = contactPoints;
-        SimStepStamp = simStepStamp;
+        SimStep = simStep;
     }
 }

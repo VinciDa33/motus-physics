@@ -2,8 +2,13 @@
 
 namespace PhysiXSharp.Core.Physics.Colliders;
 
-public class RectangleCollider(Vector size) : PolygonCollider(CreateRectangle(size))
+public class RectangleCollider : PolygonCollider
 {
+    internal RectangleCollider(Vector size) : base(CreateRectangle(size))
+    {
+        
+    }
+    
     private static Vector[] CreateRectangle(Vector size)
     {
         Vector[] points = new Vector[4];

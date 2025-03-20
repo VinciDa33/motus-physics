@@ -21,7 +21,11 @@ public class Vector : ICloneable
     public static Vector operator *(double d, Vector v1) => new Vector(v1.x * d, v1.y * d);
 
     public static Vector operator /(Vector v1, double d) => new Vector(v1.x / d, v1.y / d);
-    
+
+    public bool Equals(Vector other)
+    {
+        return x == other.x && y == other.y;
+    }
     
     public double Magnitude() {
         return Math.Sqrt(x * x + y * y);
@@ -57,9 +61,9 @@ public class Vector : ICloneable
         return new Vector(-y, x).Normalized();
     }
     
-    public void Rotate(float angle)
+    public void Rotate(double degrees)
     {
-        double theta = (Math.PI / 180) * angle;
+        double theta = (Math.PI / 180) * degrees;
 
         double cs = Math.Cos(theta);
         double sn = Math.Sin(theta);
@@ -71,9 +75,9 @@ public class Vector : ICloneable
         y = py;
     }
     
-    public Vector Rotated(float angle)
+    public Vector Rotated(double degrees)
     {
-        double theta = (Math.PI / 180) * angle;
+        double theta = (Math.PI / 180) * degrees;
 
         double cs = Math.Cos(theta);
         double sn = Math.Sin(theta);
@@ -101,6 +105,11 @@ public class Vector : ICloneable
     public static double Dot(Vector v1, Vector v2)
     {
         return v1.x * v2.x + v1.y * v2.y;
+    }
+
+    public static double Cross(Vector v1, Vector v2)
+    {
+        return v1.x * v2.y - v1.y * v2.x;
     }
 
     public override string ToString()

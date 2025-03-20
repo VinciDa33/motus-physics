@@ -5,39 +5,47 @@ namespace PhysiXSharp.Core.Physics.Colliders;
 
 public abstract class Collider
 {
+    public bool IsEnabled { get; private set; } = true;
     public bool IsTrigger { get; private set; } = false;
-    public PhysicsObject? PhysicsObject { get; private set; }
-    public Vector Position => PhysicsObject == null ? Vector.Zero : PhysicsObject.Position;
+    public Rigidbody? Rigidbody { get; private set; }
+    public Vector Position => Rigidbody == null ? Vector.Zero : Rigidbody.Position;
     public AABB AxisAlignedBoundingBox { get; protected set; }
-    public List<Vector> Normals { get; protected set; }
+    public Vector[] Normals { get; protected set; } = [];
     
-    public void SetPhysicsObject(PhysicsObject physicsObject)
+    public void SetRigidbody(Rigidbody rigidbody)
     {
-        PhysicsObject = physicsObject;
+        Rigidbody = rigidbody;
         CalculateAABB();
         CalculateNormals();
+    }
+
+    public void SetEnabled(bool enable)
+    {
+        IsEnabled = enable;
+    }
+
+    public void SetTrigger(bool setTrigger)
+    {
+        IsTrigger = setTrigger;
     }
     
     internal abstract void CalculateAABB();
     internal abstract void CalculateNormals();
-    
-    internal abstract void Rotate(float degrees);
+    internal abstract void UpdateRotation();
 
-    internal abstract void SetRotation(float degrees);
-    
     /// <summary>
     /// Returns true if the axis aligned bounding boxes of the two colliders are overlapping
     /// </summary>
-    /// <param name="collider1"></param>
-    /// <param name="collider2 "></param>
+    /// <param name="colliderA"></param>
+    /// <param name="colliderB "></param>
     /// <returns></returns>
-    public static bool OverlapAABB(Collider collider1, Collider collider2)
+    public static bool OverlapAABB(Collider colliderA, Collider colliderB)
     {
-        Vector minA = collider1.Position + collider1.AxisAlignedBoundingBox.Min;
-        Vector maxA = collider1.Position + collider1.AxisAlignedBoundingBox.Max;
+        Vector minA = colliderA.Position + colliderA.AxisAlignedBoundingBox.Min;
+        Vector maxA = colliderA.Position + colliderA.AxisAlignedBoundingBox.Max;
         
-        Vector minB = collider2.Position + collider2.AxisAlignedBoundingBox.Min;
-        Vector maxB = collider2.Position + collider2.AxisAlignedBoundingBox.Max;
+        Vector minB = colliderB.Position + colliderB.AxisAlignedBoundingBox.Min;
+        Vector maxB = colliderB.Position + colliderB.AxisAlignedBoundingBox.Max;
         
         
         if (minA.x > maxB.x ||  minB.x > maxA.x)
@@ -48,4 +56,48 @@ public abstract class Collider
 
         return true;
     }
+
+
+    #region Collider Factories
+
+    public static CircleCollider CreateCircleCollider(double radius)
+    {
+        if (radius <= 0d)
+        {
+            PhysiX.Logger.LogWarning("Circle collider radius must be positive!\nRadius has been set to 0.01.");
+            radius = 0.01d;
+        }
+        
+        return new CircleCollider(radius);
+    }
+
+    public static PolygonCollider CreateRectangleCollider(Vector size)
+    {
+        if (size.x <= 0d)
+        {
+            PhysiX.Logger.LogWarning("Rectangle collider width must be positive!\nWidth has been set to 0.01.");
+            size.x = 0.01d;
+        }
+        
+        if (size.y <= 0d)
+        {
+            PhysiX.Logger.LogWarning("Rectangle collider height must be positive!\nHeight has been set to 0.01.");
+            size.y = 0.01d;
+        }
+
+        return new RectangleCollider(size);
+    }
+
+    public static PolygonCollider CreatePolygonCollider(params Vector[] points)
+    {
+        if (points.Length < 3)
+        {
+            PhysiX.Logger.LogError("Polygon collider must have 3 or more vertices!\nA default rectangle shape has been created instead!");
+            return new PolygonCollider(new Vector(0.5d, 0.5d), new Vector(0.5d, -0.5d), new Vector(-0.5d, -0.5d), new Vector(-0.5d, 0.5d));
+        }
+
+        return new PolygonCollider(points);
+    }
+    #endregion
+    
 }

@@ -6,7 +6,7 @@ public class CircleCollider : Collider
 {
     public double Radius { get; private set; }
 
-    public CircleCollider(double radius)
+    internal CircleCollider(double radius)
     {
         Radius = radius;
     }
@@ -19,19 +19,15 @@ public class CircleCollider : Collider
         AABB aabb = new AABB(min, max);
         AxisAlignedBoundingBox = aabb;
     }
-
-    internal override void Rotate(float degrees)
-    {
-        //No need to rotate a circle
-    }
-
-    internal override void SetRotation(float degrees)
-    {
-        //No need to rotate a circle
-    }
+    
 
     internal override void CalculateNormals()
     {
-        Normals = new List<Vector>();
+        //No need to calculate normals for a circle
+    }
+
+    internal override void UpdateRotation()
+    {
+        //No need to rotate a circle
     }
 }

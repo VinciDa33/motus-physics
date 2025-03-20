@@ -31,14 +31,14 @@ internal static class ContactPointFinder
 
         double minDistSq = double.MaxValue;
 
-        for(int i = 0; i < p1.Vertices.Count; i++)
+        for(int i = 0; i < p1.Vertices.Length; i++)
         {
             Vector p = p1.Position + p1.Vertices[i];
 
-            for(int j = 0; j < p2.Vertices.Count; j++)
+            for(int j = 0; j < p2.Vertices.Length; j++)
             {
                 Vector va = p2.Position + p2.Vertices[j];
-                Vector vb = p2.Position + p2.Vertices[(j + 1) % p2.Vertices.Count];
+                Vector vb = p2.Position + p2.Vertices[(j + 1) % p2.Vertices.Length];
 
                 PointSegmentDistance(p, va, vb, out double distSq, out Vector cp);
                 
@@ -60,14 +60,14 @@ internal static class ContactPointFinder
             }
         }
 
-        for (int i = 0; i < p2.Vertices.Count; i++)
+        for (int i = 0; i < p2.Vertices.Length; i++)
         {
             Vector p = p2.Position + p2.Vertices[i];
 
-            for (int j = 0; j < p1.Vertices.Count; j++)
+            for (int j = 0; j < p1.Vertices.Length; j++)
             {
                 Vector va = p1.Position + p1.Vertices[j];
-                Vector vb = p1.Position + p1.Vertices[(j + 1) % p1.Vertices.Count];
+                Vector vb = p1.Position + p1.Vertices[(j + 1) % p1.Vertices.Length];
 
                 PointSegmentDistance(p, va, vb, out double distSq, out Vector cp);
 
@@ -99,10 +99,10 @@ internal static class ContactPointFinder
 
         double minDistSq = double.MaxValue;
 
-        for(int i = 0; i < p.Vertices.Count; i++)
+        for(int i = 0; i < p.Vertices.Length; i++)
         {
             Vector va = p.Position + p.Vertices[i];
-            Vector vb = p.Position + p.Vertices[(i + 1) % p.Vertices.Count];
+            Vector vb = p.Position + p.Vertices[(i + 1) % p.Vertices.Length];
 
             PointSegmentDistance(c.Position, va, vb, out double distSq, out Vector contact);
             

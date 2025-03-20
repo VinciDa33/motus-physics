@@ -3,10 +3,10 @@ using PhysiXSharp.Core.Utility;
 
 namespace PhysiXSharp.Core.Physics.Data;
 
-public class CollisionEvent(PhysicsObject physicsObject1, PhysicsObject physicsObject2, Vector normal, double depth)
+public class CollisionEvent(Rigidbody rigidbodyA, Rigidbody rigidbodyB, Vector collisionNormal, double penetrationDepth)
 {
-    public readonly PhysicsObject PhysicsObject1 = physicsObject1;
-    public readonly PhysicsObject PhysicsObject2 = physicsObject2;
-    public readonly Vector CollisionNormal = normal;
-    public readonly double PenetrationDepth = depth;
+    public readonly Rigidbody RigidbodyA = rigidbodyA;
+    public readonly Rigidbody RigidbodyB = rigidbodyB;
+    public readonly Vector CollisionNormal = collisionNormal;
+    public readonly double PenetrationDepth = penetrationDepth;
 }

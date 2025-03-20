@@ -1,21 +1,24 @@
 ﻿using System.Diagnostics.Contracts;
-using PhysiXSharp.Core.Utility;
+using System.Numerics;
+using Vector = PhysiXSharp.Core.Utility.Vector;
 
 namespace PhysiXSharp.Core.Physics.Colliders;
 
 public class PolygonCollider : Collider
 {
     private readonly Vector[] _baseVertices;
-    public List<Vector> Vertices { get; private set;  } = new List<Vector>();
+    public Vector[] Vertices { get; private set;  }
     
-    public PolygonCollider(params Vector[] points)
+    internal PolygonCollider(params Vector[] points)
     {
-        if (points.Length < 3)
-            PhysiX.Logger.LogError("Polygon collider must have 3 or more points!");
+        _baseVertices = new Vector[points.Length];
+        Vertices = new Vector[points.Length];
         
-        _baseVertices = points;
-        foreach(Vector vertex in _baseVertices)
-            Vertices.Add((Vector) vertex.Clone());
+        for (int i = 0; i < points.Length; i++)
+        {
+            _baseVertices[i] = (Vector) points[i].Clone();
+            Vertices[i] = (Vector)points[i].Clone();
+        }
     }
 
     internal sealed override void CalculateAABB ()
@@ -44,48 +47,36 @@ public class PolygonCollider : Collider
         AxisAlignedBoundingBox = aabb;
     }
     
-    internal override void Rotate(float degrees)
-    {
-        List<Vector> newVertices = new List<Vector>();
-        foreach (Vector vertex in Vertices)
-        {
-            newVertices.Add(((Vector)vertex.Clone()).Rotated(degrees));
-        }
-
-        Vertices = newVertices;
-        
-        CalculateAABB();
-        CalculateNormals();
-    }
-
-    internal override void SetRotation(float degrees)
-    {
-        //Reset vertices
-        List<Vector> newVertices = new List<Vector>();
-        foreach(Vector vertex in _baseVertices)
-            newVertices.Add((Vector) vertex.Clone());
-
-        Vertices = newVertices;
-        
-        Rotate(degrees);
-    }
 
     internal override void CalculateNormals()
     {
-        List<Vector> normals = new List<Vector>();
+        Vector[] normals = new Vector[Vertices.Length];
 
-        for (int i = 0; i < Vertices.Count; i++)
+        for (int i = 0; i < Vertices.Length; i++)
         {
-            Vector edge = Vertices[(i + 1) % Vertices.Count] - Vertices[i];
-            normals.Add(edge.Normal());
+            Vector edge = Vertices[(i + 1) % Vertices.Length] - Vertices[i];
+            normals[i] = edge.Normal();
         }
         Normals = normals;
     }
-    
+
+    internal override void UpdateRotation()
+    {
+        double rotation = Rigidbody?.Rotation ?? 0d;
+        Vector[] newVertices = new Vector[_baseVertices.Length];
+        for (int i = 0; i < _baseVertices.Length; i++)
+            newVertices[i] = ((Vector) _baseVertices[i].Clone()).Rotated(rotation);
+        
+        Vertices = newVertices;
+        
+        CalculateNormals();
+        CalculateAABB();
+    }
+
     public Vector GetPolygonCentroid()
     {
         Vector sum = Vector.Zero;
         foreach (Vector vertex in Vertices) sum += vertex;
-        return sum / Vertices.Count;
+        return sum / Vertices.Length;
     }
 }
