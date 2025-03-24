@@ -60,7 +60,7 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
             GenerateCollisionShapes(rigidbodies);
         if (PhysiXVisualizer.ShowBoundingBoxes)
             GenerateAABBShapes(rigidbodies);
-        if (PhysiXVisualizer.ShowPhysicsObjectOrigins)
+        if (PhysiXVisualizer.ShowRigidbodyOrigins)
             GeneratePhysicsOrigins(rigidbodies);
         if (PhysiXVisualizer.ShowEdgeNormals)
             GenerateNormals(rigidbodies);

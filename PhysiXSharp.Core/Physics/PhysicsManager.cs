@@ -116,6 +116,10 @@ public class PhysicsManager
         Manifolds = newManifolds;
 
         
+        //SimpleImpulseSolver.SolveCollisions(Manifolds.ToArray());
+        ImpulseSolver.SolveCollisions(Manifolds.ToArray());
+        
+        /*
         List<CollisionResolution> resolutions = new List<CollisionResolution>();
         foreach (CollisionManifold manifold in Manifolds)
         {
@@ -131,14 +135,15 @@ public class PhysicsManager
             resolution.RigidbodyB.AddVelocity(resolution.VelocityChangeB);
             //resolution.RigidbodyB.AddAngularVelocity(resolution.AngularVelocityChangeB);
         }
+        */
         
-        
+        /*
         foreach (Rigidbody rigidbody in _rigidbodies)
         {
             if (!rigidbody.IsActive)
                 continue;
             rigidbody.LateUpdate();
-        }
+        }*/
     }
 
     private void HandleBuffers()

@@ -4,8 +4,9 @@ public class Vector : ICloneable
 {
     public double x;
     public double y;
-    public static readonly Vector Zero = new Vector(0, 0);
-    
+
+    public static Vector Zero => new Vector(0d, 0d);
+
     public Vector(double x, double y)
     {
         this.x = x;
