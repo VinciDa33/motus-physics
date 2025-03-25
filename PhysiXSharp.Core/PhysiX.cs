@@ -21,6 +21,7 @@ public static class PhysiX
     public static Time Time { get; } = new Time();
     private static readonly Stopwatch DeltaStopwatch = new Stopwatch();
     private static readonly Stopwatch FixedDeltaStopwatch = new Stopwatch();
+    private static readonly Stopwatch StepTimerStopwatch = new Stopwatch();
     
     private static double _fixedSecondsElapsed = 0;
     private static double _deltaSum = 0;
@@ -67,7 +68,13 @@ public static class PhysiX
             {
                 Time.FixedDeltaTime = FixedDeltaStopwatch.Elapsed.TotalSeconds - _fixedSecondsElapsed;
                 _fixedSecondsElapsed += Time.FixedDeltaTime;
+                
+                StepTimerStopwatch.Start();
                 Step();
+                StepTimerStopwatch.Stop();
+                Time.LastStepMilliseconds = StepTimerStopwatch.Elapsed.TotalMilliseconds;
+                StepTimerStopwatch.Reset();
+                
                 Time.SimStep++;
                 _deltaSum -= 1d / _physicsStepsPerSecond;
             }

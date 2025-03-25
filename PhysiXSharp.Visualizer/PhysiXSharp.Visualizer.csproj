@@ -14,4 +14,9 @@
       <PackageReference Include="SFML.Net" Version="2.6.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Resources\arial.ttf" />
+      <EmbeddedResource Include="Resources\arial.ttf" />
+    </ItemGroup>
+
 </Project>

@@ -1,5 +1,7 @@
 ﻿
 
+using System.Reflection;
+using PhysiXSharp.Core;
 using PhysiXSharp.Core.Physics;
 using PhysiXSharp.Core.Physics.Bodies;
 using PhysiXSharp.Core.Physics.Colliders;
@@ -24,12 +26,20 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
         RenderWindow window = new RenderWindow(new VideoMode(800, 600), "PhysiXSharp Visualizer");
         window.Closed += (sender, e) => window.Close();
         
+        Font font = ResourceLoader.LoadEmbeddedFont();
+        Text text = new Text("0", font, 18) { FillColor = Color.White, Position = new Vector2f(5, 5)};
         
         // Main loop
         while (window.IsOpen)
         {
             window.DispatchEvents();
             window.Clear(new Color(30, 30, 30));
+
+            if (PhysiXVisualizer.ShowPhysicsStepCalculationTime)
+            {
+                text.DisplayedString = PhysiX.Time.LastStepMilliseconds + " millis";
+                window.Draw(text);
+            }
 
             GenerateShapes();
             

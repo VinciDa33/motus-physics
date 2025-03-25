@@ -13,6 +13,7 @@ class Program
     {
         PhysiX.SetModulePath("../../../../TestRunner/bin/Debug/net8.0");
         PhysiX.Initialize();
+        //PhysiX.SetPhysicsUpdateRate(50);
         //PhysiX.Time.TimeScale = 1d;
         //PhysiXVisualizer.ShowPolygonCentroids = true;
         //PhysiXVisualizer.ShowBoundingBoxes = true;

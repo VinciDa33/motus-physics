@@ -14,6 +14,7 @@ public static class PhysiXVisualizer
     /// </summary>
     public static int PixelsPerMeter = 25;
 
+    public static bool ShowPhysicsStepCalculationTime = true;
     public static bool ShowCollisionShapes = true;
     public static bool ShowBoundingBoxes = false;
     public static bool ShowRigidbodyOrigins = true;

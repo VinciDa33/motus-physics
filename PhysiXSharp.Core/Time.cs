@@ -6,9 +6,10 @@ public class Time
     /// The simulation timescale.
     /// Change this value to speed up, or slow down the simulation.
     /// Large values will have an effect on the robustness of the simulation.
+    /// !!! Not currently completely stable, might have an impact on simulation !!!
     /// </summary>
     public double TimeScale = 1.0d;
-
+    
     /// <summary>
     /// The number of simulation steps that have been run so far
     /// </summary>
@@ -33,4 +34,10 @@ public class Time
     /// The fixed time for each physics step
     /// </summary>
     public double FixedTimeStep { get; internal set; }
+    
+    /// <summary>
+    /// The time spent completing the last physics step. In milliseconds.
+    /// </summary>
+    public double LastStepMilliseconds { get; internal set; } = 0d;
+
 }
