@@ -1,7 +1,4 @@
-﻿
-
-using System.Reflection;
-using PhysiXSharp.Core;
+﻿using PhysiXSharp.Core;
 using PhysiXSharp.Core.Physics;
 using PhysiXSharp.Core.Physics.Bodies;
 using PhysiXSharp.Core.Physics.Colliders;
@@ -23,7 +20,8 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
     
     public void RunVisualization()
     {
-        RenderWindow window = new RenderWindow(new VideoMode(800, 600), "PhysiXSharp Visualizer");
+        VideoMode videoMode = new VideoMode(800, 600);
+        RenderWindow window = new RenderWindow(videoMode, "PhysiXSharp Visualizer");
         window.Closed += (sender, e) => window.Close();
         
         Font font = ResourceLoader.LoadEmbeddedFont();
@@ -42,19 +40,18 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
             }
 
             GenerateShapes();
-            
+
             foreach (Shape shape in _shapesToRender)
                 window.Draw(shape);
-            
+
             foreach (Vertex[] lineShape in _lineShapesToRender)
                 window.Draw(lineShape, PrimitiveType.LineStrip);
-            
-            foreach(Vertex[] line in _linesToRender)
+
+            foreach (Vertex[] line in _linesToRender)
                 window.Draw(line, PrimitiveType.Lines);
 
             window.Display();
         }
-        
     }
 
     private void GenerateShapes()

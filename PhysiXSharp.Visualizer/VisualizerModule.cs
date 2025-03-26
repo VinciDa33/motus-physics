@@ -1,4 +1,5 @@
-﻿using PhysiXSharp.Core;
+﻿using System.Reflection;
+using PhysiXSharp.Core;
 using PhysiXSharp.Core.Modularity;
 using PhysiXSharp.Core.Physics;
 
@@ -16,6 +17,10 @@ internal class VisualizerModule : IPhysiXModule
             PhysiX.Logger.Log("Visualization disabled!");
             return;
         }
+
+        AppDomain.CurrentDomain.AssemblyResolve += ResourceLoader.LoadEmbeddedAssembly;
+        
+        ResourceLoader.LoadSFML();
 
         _visualizationThread = new Thread(new VisualizationRunner(physicsManager).RunVisualization);
         _visualizationThread.Start();

@@ -1,11 +1,12 @@
 ﻿using System.Reflection;
+using System.Runtime.InteropServices;
 using SFML.Graphics;
 
 namespace PhysiXSharp.Visualizer;
 
-public class ResourceLoader
+internal static class ResourceLoader
 {
-    public static Font LoadEmbeddedFont()
+    internal static Font LoadEmbeddedFont()
     {
         // Get the assembly where the resource is embedded
         Assembly assembly = Assembly.GetExecutingAssembly();
@@ -29,4 +30,91 @@ public class ResourceLoader
             return new Font(fontData);
         }
     }
+    
+    private static readonly Dictionary<string, Assembly> LoadedAssemblies = new();
+    internal static Assembly? LoadEmbeddedAssembly(object? sender, ResolveEventArgs args)
+    {
+        string resourceName = "PhysiXSharp.Visualizer.Resources." + new AssemblyName(args.Name).Name + ".dll";
+        Console.WriteLine("Trying to load:" + resourceName);
+        
+        string? name = new AssemblyName(args.Name).Name;
+        
+        if (name == null)
+            return null;
+        
+        if (LoadedAssemblies.TryGetValue(name, out var loadedAssembly))
+        {
+            Console.WriteLine($"Already loaded: {name}");
+            return loadedAssembly; // Return cached version
+        }
+        
+        using Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+        if (stream == null) 
+            return null;
+        
+        byte[] assemblyData = new byte[stream.Length];
+        var read = stream.Read(assemblyData, 0, assemblyData.Length);
+        var assembly = Assembly.Load(assemblyData);
+        
+        LoadedAssemblies[name] = assembly; // Store reference
+
+        return assembly;
+    }
+    
+    
+    
+    
+    private static bool _isDependenciesLoaded = false;
+    internal static void LoadSFML()
+    {
+        if (_isDependenciesLoaded) return;
+        _isDependenciesLoaded = true;
+
+        // DLLs to extract
+        string[] sfmlDlls = {
+            "csfml-system.dll",
+            "csfml-window.dll",
+            "csfml-graphics.dll",
+        };
+
+        // Extract DLLs to a temporary directory
+        string tempPath = Path.Combine(Path.GetTempPath(), "SFMLNative");
+        Directory.CreateDirectory(tempPath);
+
+        Console.WriteLine("Created directory: " + tempPath);
+        
+        foreach (string dll in sfmlDlls)
+        {
+            Console.WriteLine("Extracting: " + dll);
+            ExtractEmbeddedDll($"PhysiXSharp.Visualizer.NativeLibs.{dll}", Path.Combine(tempPath, dll));
+        }
+
+        // Set the extracted path as a DLL search directory
+        AddToDllSearchPath(tempPath);
+    }
+    
+    private static void ExtractEmbeddedDll(string resourceName, string outputPath)
+    {
+        using Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
+        if (stream == null)
+            throw new Exception($"Embedded resource '{resourceName}' not found.");
+
+        using FileStream fileStream = new FileStream(outputPath, FileMode.Create, FileAccess.Write);
+        stream.CopyTo(fileStream);
+    }
+    
+    private static void AddToDllSearchPath(string path)
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            SetDllDirectory(path);
+        }
+        else
+        {
+            Environment.SetEnvironmentVariable("LD_LIBRARY_PATH", path);
+        }
+    }
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    private static extern bool SetDllDirectory(string lpPathName);
 }

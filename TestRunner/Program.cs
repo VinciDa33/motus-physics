@@ -3,7 +3,6 @@ using PhysiXSharp.Core.Physics.Bodies;
 using PhysiXSharp.Core.Physics.Colliders;
 using PhysiXSharp.Core.Utility;
 using PhysiXSharp.Visualizer;
-using SFML.Window;
 
 namespace TestRunner;
 
