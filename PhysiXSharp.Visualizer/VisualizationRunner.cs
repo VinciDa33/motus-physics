@@ -64,24 +64,17 @@ internal class VisualizationRunner
         
         PhysicsManager physicsManager = PhysicsManager.Instance;
         List<Rigidbody> rigidbodies = physicsManager.GetRigidbodies();
-
-        try
-        {
-            if (PhysiXVisualizer.ShowCollisionShapes)
-                GenerateCollisionShapes(rigidbodies);
-            if (PhysiXVisualizer.ShowBoundingBoxes)
-                GenerateAABBShapes(rigidbodies);
-            if (PhysiXVisualizer.ShowRigidbodyOrigins)
-                GeneratePhysicsOrigins(rigidbodies);
-            if (PhysiXVisualizer.ShowEdgeNormals)
-                GenerateNormals(rigidbodies);
-            if (PhysiXVisualizer.ShowCollisionContactPoints)
-                GenerateContactPoints(physicsManager.Manifolds);
-        }
-        catch (AccessViolationException ave)
-        {
-            PhysiX.Logger.LogError("Internal exception in visualizer module: Handled");
-        }
+        
+        if (PhysiXVisualizer.ShowCollisionShapes)
+            GenerateCollisionShapes(rigidbodies);
+        if (PhysiXVisualizer.ShowBoundingBoxes)
+            GenerateAABBShapes(rigidbodies);
+        if (PhysiXVisualizer.ShowRigidbodyOrigins)
+            GeneratePhysicsOrigins(rigidbodies);
+        if (PhysiXVisualizer.ShowEdgeNormals)
+            GenerateNormals(rigidbodies);
+        if (PhysiXVisualizer.ShowCollisionContactPoints)
+            GenerateContactPoints(physicsManager.Manifolds);
     }
 
     private void GenerateCollisionShapes(List<Rigidbody> rigidbodies)

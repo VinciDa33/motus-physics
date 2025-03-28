@@ -409,5 +409,11 @@ public sealed class Rigidbody
     {
         return new Rigidbody(position, rotation, Vector.Zero, 0d, 1d, 1d, Vector.Zero, 0d, 0d, 0.4d, collider, true);
     }
+
+    public static Rigidbody CreateStaticbody(Collider collider, Vector? position = null, double rotation = 0d, double restitution = 0.4d)
+    {
+        position ??= Vector.Zero;
+        return new Rigidbody(position, rotation, Vector.Zero, 0d, 1d, 1d, Vector.Zero, 0d, 0d, restitution, collider, true);
+    }
     #endregion
 }
