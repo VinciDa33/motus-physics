@@ -61,7 +61,7 @@ public sealed class Rigidbody
     /// 0 -> Perfect inelastic (objects will stick)
     /// 1 -> Perfect elastic (full bounce, no energy loss)
     /// </summary>
-    public double Restitution { get; private set; } = 0.5d;
+    public double Restitution { get; private set; }
     public Collider Collider { get; private set; }
     
     public delegate void CollisionDelegate(CollisionManifold manifold);
@@ -109,7 +109,8 @@ public sealed class Rigidbody
         TranslatePosition(Velocity * PhysiX.Time.FixedTimeStep * PhysiX.Time.TimeScale);
         
         //Update rotation based on angular velocity
-        Rotate((float) ((AngularVelocity * 180d / Math.PI) * PhysiX.Time.FixedTimeStep * PhysiX.Time.TimeScale));
+        double rotaryChange = AngularVelocity * 180d / Math.PI * PhysiX.Time.FixedTimeStep * PhysiX.Time.TimeScale;
+        Rotation += rotaryChange;
         
         //Update velocity based on gravity
         Velocity += Gravity * PhysiX.Time.FixedTimeStep * PhysiX.Time.TimeScale;
@@ -120,8 +121,9 @@ public sealed class Rigidbody
         //Update angular velocity based on angular drag
         AngularVelocity *= (1 - AngularDragCoefficient * PhysiX.Time.FixedTimeStep * PhysiX.Time.TimeScale);
         
-        //Update the colliders rotation
-        Collider.UpdateRotation();
+        //Update the colliders rotation, only if a change in rotation occured (This also updates it AABB and its normals)
+        if (rotaryChange != 0)
+            Collider.UpdateRotation();
         
         //Handle old collision evetns
         foreach(KeyValuePair<(int, int), CollisionManifold> entry in _currentCollisions)
@@ -162,7 +164,6 @@ public sealed class Rigidbody
     public void SetPosition(Vector position)
     {
         Position = position;
-        Collider.CalculateAABB();
     }
 
     /// <summary>
@@ -172,7 +173,6 @@ public sealed class Rigidbody
     public void TranslatePosition(Vector translation)
     {
         Position += translation;
-        Collider.CalculateAABB();
     }
     
     /// <summary>

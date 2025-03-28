@@ -8,10 +8,10 @@ namespace PhysiXSharp.Core.Physics;
 
 public class PhysicsManager
 {
-    private static PhysicsManager _instance = null!;
+    private static PhysicsManager? _instance = null;
     private static readonly object InstanceLock = new ();
 
-    internal static PhysicsManager Instance
+    public static PhysicsManager Instance
     {
         get
         {
@@ -32,13 +32,14 @@ public class PhysicsManager
     private readonly List<Rigidbody> _removeRigidbodiesBuffer = new List<Rigidbody>();
     
     public List<CollisionManifold> Manifolds { get; private set; } = new List<CollisionManifold>();
+    private bool _clearSimulation = false;
     
     /// <summary>
     /// Schedule a rigidbody to be added into the system.
     /// The actual addition will occur on the following physics step.
     /// </summary>
     /// <param name="rigidbody"></param>
-    public void AddRigidbody(Rigidbody rigidbody)
+    internal void AddRigidbody(Rigidbody rigidbody)
     {
         _newRigidbodiesBuffer.Add(rigidbody);
     }
@@ -47,23 +48,23 @@ public class PhysicsManager
     /// The actual removal will occur on the following physics step.
     /// </summary>
     /// <param name="rigidbody"></param>
-    public void RemoveRigidbody(Rigidbody rigidbody)
+    internal void RemoveRigidbody(Rigidbody rigidbody)
     {
         _removeRigidbodiesBuffer.Add(rigidbody);
     }
-
+    
     public List<Rigidbody> GetRigidbodies()
     {
         return new List<Rigidbody>(_rigidbodies);
     }
     
-    public int GetUniqueRigidbodyId()
+    internal int GetUniqueRigidbodyId()
     {
         //Return an id and post-increment the id tracker
         return _rigidbodyIdTracker++;
     }
 
-    public void Update()
+    internal void Update()
     {
         //Add and/or remove scheduled rigidbodies
         HandleBuffers();
@@ -76,29 +77,11 @@ public class PhysicsManager
             rigidbody.Update();
         }
         
-        //Obtain all collision events to be handled
-        List<CollisionEvent> collisionEvents = new List<CollisionEvent>();
-        for (int i = 0; i < _rigidbodies.Count - 1; i++)
-        {
-            for (int j = i + 1; j < _rigidbodies.Count; j++)
-            {
-                //Skip collisions with inactive objects
-                if (!_rigidbodies[i].IsActive || !_rigidbodies[j].IsActive)
-                    continue;
-                
-                //Skip collisions between static objects
-                if (_rigidbodies[i].IsStatic && _rigidbodies[j].IsStatic)
-                    continue;
-                
-                if (SATCollisionDetector.CheckCollision(_rigidbodies[i], _rigidbodies[j], out CollisionEvent? collisionEvent))
-                    collisionEvents.Add(collisionEvent);
-            }
-        }
-
+        //Obtain all collision events to be handled through SAT collision detection
+        CollisionEvent[] collisionEvents = SATCollisionDetector.CheckCollision(_rigidbodies);
         
-        //Separate out overlapping colliders
-        foreach (CollisionEvent collisionEvent in collisionEvents)
-            CollisionSeparator.SeparateCollisionBodies(collisionEvent.RigidbodyA, collisionEvent.RigidbodyB, collisionEvent.CollisionNormal, collisionEvent.PenetrationDepth);
+        //Separate out overlapping colliders using the data gained using SAT
+        CollisionSeparator.SeparateCollisionBodies(collisionEvents);
 
         
         List<CollisionManifold> newManifolds = new List<CollisionManifold>();
@@ -115,35 +98,17 @@ public class PhysicsManager
         
         Manifolds = newManifolds;
 
-        
-        //SimpleImpulseSolver.SolveCollisions(Manifolds.ToArray());
+        //Solve applied forces on each rigidbody
         ImpulseSolver.SolveCollisions(Manifolds.ToArray());
-        
-        /*
-        List<CollisionResolution> resolutions = new List<CollisionResolution>();
-        foreach (CollisionManifold manifold in Manifolds)
-        {
-            CollisionResolution resolution = ImpulseSolver.SolveCollision(manifold);
-            resolutions.Add(resolution);
-        }
 
-        foreach (CollisionResolution resolution in resolutions)
+        //Clear out the simulation if the clear flag has been set
+        if (_clearSimulation)
         {
-            resolution.RigidbodyA.AddVelocity(resolution.VelocityChangeA);
-            //resolution.RigidbodyA.AddAngularVelocity(resolution.AngularVelocityChangeA);
-            
-            resolution.RigidbodyB.AddVelocity(resolution.VelocityChangeB);
-            //resolution.RigidbodyB.AddAngularVelocity(resolution.AngularVelocityChangeB);
+            _rigidbodies.Clear();
+            _newRigidbodiesBuffer.Clear();
+            _removeRigidbodiesBuffer.Clear();
+            _clearSimulation = false;
         }
-        */
-        
-        /*
-        foreach (Rigidbody rigidbody in _rigidbodies)
-        {
-            if (!rigidbody.IsActive)
-                continue;
-            rigidbody.LateUpdate();
-        }*/
     }
 
     private void HandleBuffers()
@@ -157,5 +122,10 @@ public class PhysicsManager
         //Remove objects that have been handled from the buffers
         _newRigidbodiesBuffer.RemoveRange(newRigidbodies);
         _removeRigidbodiesBuffer.RemoveRange(removeRigidbodies);
+    }
+
+    public void ClearSimulation()
+    {
+        _clearSimulation = true;
     }
 }

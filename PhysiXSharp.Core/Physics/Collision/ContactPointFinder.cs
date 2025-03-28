@@ -6,24 +6,24 @@ namespace PhysiXSharp.Core.Physics.Collision;
 
 internal static class ContactPointFinder
 {
-    internal static Vector[] FindContactPoints(Collider collider1, Collider collider2)
+    internal static Vector[] FindContactPoints(Collider colliderA, Collider colliderB)
     {
-        if (collider1 is CircleCollider circle1 && collider2 is CircleCollider circle2)
+        if (colliderA is CircleCollider circle1 && colliderB is CircleCollider circle2)
             return [FindCircleCircleContactPoint(circle1, circle2)];
 
-        if (collider1 is CircleCollider circleP1 && collider2 is PolygonCollider polyC1)
+        if (colliderA is CircleCollider circleP1 && colliderB is PolygonCollider polyC1)
             return [FindCirclePolygonContactPoint(circleP1, polyC1)];
         
-        if (collider1 is PolygonCollider polyC2 && collider2 is CircleCollider circleP2)
+        if (colliderA is PolygonCollider polyC2 && colliderB is CircleCollider circleP2)
             return [FindCirclePolygonContactPoint(circleP2, polyC2)];
 
-        if (collider1 is PolygonCollider poly1 && collider2 is PolygonCollider poly2)
+        if (colliderA is PolygonCollider poly1 && colliderB is PolygonCollider poly2)
             return FindPolygonPolygonContactPoints(poly1, poly2);
 
         return [];
     }
     
-    internal static Vector[] FindPolygonPolygonContactPoints(PolygonCollider p1, PolygonCollider p2)
+    internal static Vector[] FindPolygonPolygonContactPoints(PolygonCollider pA, PolygonCollider pB)
     {
         Vector contact1 = Vector.Zero;
         Vector contact2 = Vector.Zero;
@@ -31,14 +31,14 @@ internal static class ContactPointFinder
 
         double minDistSq = double.MaxValue;
 
-        for(int i = 0; i < p1.Vertices.Length; i++)
+        for(int i = 0; i < pA.Vertices.Length; i++)
         {
-            Vector p = p1.Position + p1.Vertices[i];
+            Vector p = pA.Position + pA.Vertices[i];
 
-            for(int j = 0; j < p2.Vertices.Length; j++)
+            for(int j = 0; j < pB.Vertices.Length; j++)
             {
-                Vector va = p2.Position + p2.Vertices[j];
-                Vector vb = p2.Position + p2.Vertices[(j + 1) % p2.Vertices.Length];
+                Vector va = pB.Position + pB.Vertices[j];
+                Vector vb = pB.Position + pB.Vertices[(j + 1) % pB.Vertices.Length];
 
                 PointSegmentDistance(p, va, vb, out double distSq, out Vector cp);
                 
@@ -60,14 +60,14 @@ internal static class ContactPointFinder
             }
         }
 
-        for (int i = 0; i < p2.Vertices.Length; i++)
+        for (int i = 0; i < pB.Vertices.Length; i++)
         {
-            Vector p = p2.Position + p2.Vertices[i];
+            Vector p = pB.Position + pB.Vertices[i];
 
-            for (int j = 0; j < p1.Vertices.Length; j++)
+            for (int j = 0; j < pA.Vertices.Length; j++)
             {
-                Vector va = p1.Position + p1.Vertices[j];
-                Vector vb = p1.Position + p1.Vertices[(j + 1) % p1.Vertices.Length];
+                Vector va = pA.Position + pA.Vertices[j];
+                Vector vb = pA.Position + pA.Vertices[(j + 1) % pA.Vertices.Length];
 
                 PointSegmentDistance(p, va, vb, out double distSq, out Vector cp);
 
@@ -116,10 +116,10 @@ internal static class ContactPointFinder
         return contactPoint;
     }
 
-    internal static Vector FindCircleCircleContactPoint(CircleCollider c1, CircleCollider c2)
+    internal static Vector FindCircleCircleContactPoint(CircleCollider cA, CircleCollider cB)
     {
-        Vector ab = (c2.Position - c1.Position).Normalized();
-        return c1.Position + ab * c1.Radius;
+        Vector ab = (cB.Position - cA.Position).Normalized();
+        return cA.Position + ab * cA.Radius;
     }
     
     internal static void PointSegmentDistance(Vector point, Vector segmentVertexA, Vector segmentVertexB, out double distanceSquared, out Vector contactPoint)

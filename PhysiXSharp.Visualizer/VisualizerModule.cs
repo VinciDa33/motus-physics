@@ -8,8 +8,9 @@ namespace PhysiXSharp.Visualizer;
 internal class VisualizerModule : IPhysiXModule
 {
     private static Thread? _visualizationThread = null;
+    private VisualizationRunner runner;
     
-    public void Initialize(PhysicsManager physicsManager)
+    public void Initialize()
     {
         PhysiX.Logger.Log("Visualizer module initialized!");
         if (!PhysiXVisualizer.DoVisualization)
@@ -18,11 +19,14 @@ internal class VisualizerModule : IPhysiXModule
             return;
         }
 
+        //Dynamically load the SFML.net wrappers
         AppDomain.CurrentDomain.AssemblyResolve += ResourceLoader.LoadEmbeddedAssembly;
-        
+        //Dynamically extract and reference the SFML native files
         ResourceLoader.LoadSFML();
 
-        _visualizationThread = new Thread(new VisualizationRunner(physicsManager).RunVisualization);
+        //Start the visualization thread
+        runner = new VisualizationRunner();
+        _visualizationThread = new Thread(runner.RunVisualization);
         _visualizationThread.Start();
         
     }
@@ -32,7 +36,12 @@ internal class VisualizerModule : IPhysiXModule
         //throw new NotImplementedException();
     }
 
-    public static bool IsVisualizationActive()
+    public void Shutdown()
+    {
+        runner.Shutdown = true;
+    }
+
+    internal static bool IsVisualizationActive()
     {
         if (_visualizationThread == null)
             return false;

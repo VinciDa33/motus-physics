@@ -9,11 +9,13 @@ public static class ImpulseSolver
 {
     public static void SolveCollisions(CollisionManifold[] manifolds)
     {
-        CollisionResolution[] resolutions = new CollisionResolution[manifolds.Length];
-        for (int i = 0; i < manifolds.Length; i++)
+        List<CollisionResolution> resolutions = new List<CollisionResolution>();
+        foreach (CollisionManifold manifold in manifolds)
         {
-            CollisionResolution resolution = IdentifyAndSolve(manifolds[i]);
-            resolutions[i] = resolution;
+            //Skip calculating impulses for collisions involving triggers
+            if (manifold.RigidbodyA.Collider.IsTrigger || manifold.RigidbodyB.Collider.IsTrigger)
+                continue;
+            resolutions.Add(IdentifyAndSolve(manifold));
         }
         
         foreach (CollisionResolution resolution in resolutions)

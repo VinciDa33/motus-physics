@@ -82,6 +82,9 @@ public class Logger(string logSource)
         if (!_doLogging)
             return;
         
+        if (!_doWarnings)
+            return;
+        
         Console.ForegroundColor = WarningLogColor;
         Console.WriteLine($"{logSource}: {warningMessage}");
         Console.ForegroundColor = MessageLogColor;
@@ -94,6 +97,9 @@ public class Logger(string logSource)
     public void LogError(string errorMessage)
     {
         if (!_doLogging)
+            return;
+        
+        if (!_doErrors)
             return;
         
         Console.ForegroundColor = ErrorLogColor;

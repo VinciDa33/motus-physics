@@ -72,11 +72,4 @@ public class PolygonCollider : Collider
         CalculateNormals();
         CalculateAABB();
     }
-
-    public Vector GetPolygonCentroid()
-    {
-        Vector sum = Vector.Zero;
-        foreach (Vector vertex in Vertices) sum += vertex;
-        return sum / Vertices.Length;
-    }
 }

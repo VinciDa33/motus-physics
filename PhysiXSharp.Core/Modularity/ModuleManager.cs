@@ -3,12 +3,12 @@ using PhysiXSharp.Core.Physics;
 
 namespace PhysiXSharp.Core.Modularity;
 
-internal sealed class ModuleManager
+public sealed class ModuleManager
 {
-    private static ModuleManager _instance = null!;
+    private static ModuleManager? _instance = null;
     private static readonly object InstanceLock = new ();
 
-    public static ModuleManager Instance
+    internal static ModuleManager Instance
     {
         get
         {
@@ -23,12 +23,15 @@ internal sealed class ModuleManager
 
     private readonly List<IPhysiXModule> _physiXModules = new List<IPhysiXModule>();
 
-    public List<IPhysiXModule> GetLoadedModules()
+    public String[] GetListOfLoadedModules()
     {
-        return _physiXModules;
+        string[] types = new string[_physiXModules.Count];
+        for (int i = 0; i < _physiXModules.Count; i++)
+            types[i] = _physiXModules[i].GetType().ToString();
+        return types;
     }
     
-    public void Load(string path)
+    internal void Load(string path)
     {
         PhysiX.Logger.Log("Loading modules");
 
@@ -72,14 +75,23 @@ internal sealed class ModuleManager
 
         //Initialize all modules found
         foreach (IPhysiXModule module in _physiXModules)
-            module.Initialize(PhysicsManager.Instance);
+            module.Initialize();
     }
 
-    public void UpdateModules()
+    internal void UpdateModules()
     {
         foreach (IPhysiXModule physixModule in _physiXModules)
         {
             physixModule.Update();
+        }
+    }
+
+    internal void ShutdownModules()
+    {
+        foreach (IPhysiXModule physixModule in _physiXModules)
+        {
+            physixModule.Shutdown();
+            PhysiX.Logger.Log("Shutdown: " + physixModule.GetType());
         }
     }
 }

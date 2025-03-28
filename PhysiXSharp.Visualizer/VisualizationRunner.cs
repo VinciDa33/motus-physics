@@ -10,17 +10,16 @@ using SFML.Window;
 
 namespace PhysiXSharp.Visualizer;
 
-internal class VisualizationRunner(PhysicsManager physicsManager)
+internal class VisualizationRunner
 {
-    private readonly PhysicsManager _physicsManager = physicsManager;
-
     private readonly List<Shape> _shapesToRender = new List<Shape>();
     private readonly List<Vertex[]> _lineShapesToRender = new List<Vertex[]>();
     private readonly List<Vertex[]> _linesToRender = new List<Vertex[]>();
+    internal bool Shutdown = false;
     
     public void RunVisualization()
     {
-        VideoMode videoMode = new VideoMode(800, 600);
+        VideoMode videoMode = new VideoMode((uint)PhysiXVisualizer.WindowSize.x, (uint)PhysiXVisualizer.WindowSize.y);
         RenderWindow window = new RenderWindow(videoMode, "PhysiXSharp Visualizer");
         window.Closed += (sender, e) => window.Close();
         
@@ -51,6 +50,9 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
                 window.Draw(line, PrimitiveType.Lines);
 
             window.Display();
+            
+            if (Shutdown)
+                break;
         }
     }
 
@@ -60,21 +62,26 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
         _lineShapesToRender.Clear();
         _linesToRender.Clear();
         
-        List<Rigidbody> rigidbodies = _physicsManager.GetRigidbodies();
-        List<CollisionManifold> manifolds = _physicsManager.Manifolds;
-        
-        if (PhysiXVisualizer.ShowCollisionShapes)
-            GenerateCollisionShapes(rigidbodies);
-        if (PhysiXVisualizer.ShowBoundingBoxes)
-            GenerateAABBShapes(rigidbodies);
-        if (PhysiXVisualizer.ShowRigidbodyOrigins)
-            GeneratePhysicsOrigins(rigidbodies);
-        if (PhysiXVisualizer.ShowEdgeNormals)
-            GenerateNormals(rigidbodies);
-        if (PhysiXVisualizer.ShowCollisionContactPoints)
-            GenerateContactPoints(_physicsManager.Manifolds);
-        if (PhysiXVisualizer.ShowPolygonCentroids)
-            GeneratePolygonCentroid(rigidbodies);
+        PhysicsManager physicsManager = PhysicsManager.Instance;
+        List<Rigidbody> rigidbodies = physicsManager.GetRigidbodies();
+
+        try
+        {
+            if (PhysiXVisualizer.ShowCollisionShapes)
+                GenerateCollisionShapes(rigidbodies);
+            if (PhysiXVisualizer.ShowBoundingBoxes)
+                GenerateAABBShapes(rigidbodies);
+            if (PhysiXVisualizer.ShowRigidbodyOrigins)
+                GeneratePhysicsOrigins(rigidbodies);
+            if (PhysiXVisualizer.ShowEdgeNormals)
+                GenerateNormals(rigidbodies);
+            if (PhysiXVisualizer.ShowCollisionContactPoints)
+                GenerateContactPoints(physicsManager.Manifolds);
+        }
+        catch (AccessViolationException ave)
+        {
+            PhysiX.Logger.LogError("Internal exception in visualizer module: Handled");
+        }
     }
 
     private void GenerateCollisionShapes(List<Rigidbody> rigidbodies)
@@ -146,6 +153,7 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
                 Vector[] vertices = polygonCollider.Vertices;
                 
                 List<Vector> normals = new List<Vector>(polygonCollider.Normals);
+                
                 for (int i = 0; i < normals.Count; i++)
                 {
                     Vector vertex1 = vertices[i];
@@ -161,7 +169,7 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
         }
     }
 
-    public void GenerateContactPoints(List<CollisionManifold> manifolds)
+    private void GenerateContactPoints(List<CollisionManifold> manifolds)
     {
         foreach (CollisionManifold manifold in manifolds)
         {
@@ -171,22 +179,6 @@ internal class VisualizationRunner(PhysicsManager physicsManager)
                 {
                     FillColor = Color.Yellow,
                     Position = new Vector2f((float) contactPoint.x, (float) contactPoint.y) * PhysiXVisualizer.PixelsPerMeter - new Vector2f(1, 1)
-                });
-            }
-        }
-    }
-
-    public void GeneratePolygonCentroid(List<Rigidbody> rigidbodies)
-    {
-        foreach (Rigidbody rigidbody in rigidbodies)
-        {
-            if (rigidbody.Collider is PolygonCollider pc)
-            {
-                Vector centroid = pc.GetPolygonCentroid();
-                _shapesToRender.Add(new CircleShape(2f)
-                {
-                    FillColor = new Color(200, 140, 200),
-                    Position = new Vector2f((float) (pc.Position.x + centroid.x), (float) (pc.Position.y + centroid.y)) * PhysiXVisualizer.PixelsPerMeter - new Vector2f(1, 1)
                 });
             }
         }

@@ -14,19 +14,18 @@ class Program
         PhysiX.Initialize();
         //PhysiX.SetPhysicsUpdateRate(50);
         //PhysiX.Time.TimeScale = 1d;
-        //PhysiXVisualizer.ShowPolygonCentroids = true;
         //PhysiXVisualizer.ShowBoundingBoxes = true;
         PhysiXVisualizer.ShowCollisionContactPoints = false;
         PhysiXVisualizer.ShowRigidbodyOrigins = false;
         //PhysiXVisualizer.ShowEdgeNormals = true;
         
-        ChaoticSetup.Setup();
-        //StackSetup.Setup();
+        //ChaoticSetup.Setup();
+        StackSetup.Setup();
         //SimpleCollisionSetup.Setup();
         
         while (PhysiXVisualizer.IsVisualizerActive())
         {
-            //Keep running program until visualizer thread dies
+
         }
         
         PhysiX.Shutdown();

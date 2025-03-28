@@ -10,7 +10,7 @@ public static class PhysiX
     public static bool IsInitialized { get; private set; } = false;
     private static string _modulePath = ".";
     private static Thread _physicsThread;
-    private static bool _abortThread = false;
+    private static bool _shutdown = false;
     private static int _physicsStepsPerSecond = 50;
 
     
@@ -35,7 +35,7 @@ public static class PhysiX
     {
         if (IsInitialized)
         {
-            Logger.LogWarning("Initialization should only occur once!");
+            Logger.LogWarning("PhysiX is already initialized!");
             return;
         }
 
@@ -57,7 +57,7 @@ public static class PhysiX
     /// </summary>
     private static void Update()
     {
-        while (!_abortThread)
+        while (!_shutdown)
         {
 
             Time.DeltaTime = DeltaStopwatch.Elapsed.TotalSeconds - Time.ElapsedTime;
@@ -80,11 +80,14 @@ public static class PhysiX
             }
         }
 
-        _abortThread = false;
+        _shutdown = false;
     }
     
     private static void Step()
     {
+        if (_shutdown)
+            PhysicsManager.Instance.ClearSimulation();
+        
         PhysicsManager.Instance.Update();
         ModuleManager.Instance.UpdateModules();
     }
@@ -109,7 +112,7 @@ public static class PhysiX
     }
 
     /// <summary>
-    /// Stops the physics thread and ends the physics simulation.
+    /// Stops the physics thread and all loaded modules.
     /// </summary>
     public static void Shutdown()
     {
@@ -118,7 +121,14 @@ public static class PhysiX
             Logger.LogWarning("Cannot abort physiX thread. It is already not running!");
             return;
         }
-        
-        _abortThread = true;
+        else
+        {
+            Logger.Log("Shutdown: PhysiX.Core");
+            _shutdown = true;
+        }
+
+        ModuleManager.Instance.ShutdownModules();
+
+        IsInitialized = false;
     }
 }

@@ -4,7 +4,16 @@ namespace PhysiXSharp.Visualizer;
 
 public static class PhysiXVisualizer
 {
+    /// <summary>
+    /// Whether the visualizer should be started or not.
+    /// Must be set before PhysiX.Initialize is called.
+    /// </summary>
     public static bool DoVisualization = true;
+    
+    /// <summary>
+    /// The window size for the visualization in pixels.
+    /// Must be set before PhysiX.Initialize is called.
+    /// </summary>
     public static Vector WindowSize = new Vector(800, 600);
     
     /// <summary>
@@ -20,13 +29,22 @@ public static class PhysiXVisualizer
     public static bool ShowRigidbodyOrigins = true;
     public static bool ShowEdgeNormals = false;
     public static bool ShowCollisionContactPoints = true;
-    public static bool ShowPolygonCentroids = false;
     
+    
+    /// <summary>
+    /// Returns whether the visualizer is actively running, or if the thread has finished.
+    /// </summary>
+    /// <returns></returns>
     public static bool IsVisualizerActive()
     {
         return VisualizerModule.IsVisualizationActive();
     }
 
+    /// <summary>
+    /// Returns the width and height of the viewport in simulated meters.
+    /// Based on the window size in pixels and the current pixels per meter.
+    /// </summary>
+    /// <returns></returns>
     public static Vector GetViewportSizeInMeters()
     {
         return WindowSize / PixelsPerMeter;

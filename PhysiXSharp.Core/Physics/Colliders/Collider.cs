@@ -37,7 +37,7 @@ public abstract class Collider
     /// Returns true if the axis aligned bounding boxes of the two colliders are overlapping
     /// </summary>
     /// <param name="colliderA"></param>
-    /// <param name="colliderB "></param>
+    /// <param name="colliderB"></param>
     /// <returns></returns>
     public static bool OverlapAABB(Collider colliderA, Collider colliderB)
     {

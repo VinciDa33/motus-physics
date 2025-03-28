@@ -34,8 +34,11 @@ internal static class ResourceLoader
     private static readonly Dictionary<string, Assembly> LoadedAssemblies = new();
     internal static Assembly? LoadEmbeddedAssembly(object? sender, ResolveEventArgs args)
     {
+        if (!args.Name.Contains("SFML"))
+            return null;
+        
         string resourceName = "PhysiXSharp.Visualizer.Resources." + new AssemblyName(args.Name).Name + ".dll";
-        Console.WriteLine("Trying to load:" + resourceName);
+        Console.WriteLine("Trying to load: " + resourceName);
         
         string? name = new AssemblyName(args.Name).Name;
         

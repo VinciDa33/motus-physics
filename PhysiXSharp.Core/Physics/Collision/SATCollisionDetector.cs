@@ -7,21 +7,39 @@ namespace PhysiXSharp.Core.Physics.Collision;
 
 public static class SATCollisionDetector
 {
-    public static bool CheckCollision(Rigidbody rigidbodyA, Rigidbody rigidbodyB, out CollisionEvent? collisionEvent)
+    public static CollisionEvent[] CheckCollision(List<Rigidbody> rigidbodies)
     {
-        collisionEvent = null;
-  
-        //Check AABB overlap and skip if no overlap is found
-        if (!Collider.OverlapAABB(rigidbodyA.Collider, rigidbodyB.Collider))
-            return false;
+        List<CollisionEvent> collisionEvents = new List<CollisionEvent>();
         
-        //Check convex collision precisely
-        bool isColliding = CheckSAT(rigidbodyA, rigidbodyB, out Vector collisionNormal, out double penetrationDepth);
-        if (!isColliding)
-            return false;
+        for (int i = 0; i < rigidbodies.Count - 1; i++)
+        {
+            for (int j = i + 1; j < rigidbodies.Count; j++)
+            {
+                //Skip collisions with inactive objects
+                if (!rigidbodies[i].IsActive || !rigidbodies[j].IsActive)
+                    continue;
+                
+                //Skip collisions where one or both colliders are disabled
+                if (!rigidbodies[i].Collider.IsEnabled || !rigidbodies[j].Collider.IsEnabled)
+                    continue;
+                
+                //Skip collisions between static objects
+                if (rigidbodies[i].IsStatic && rigidbodies[j].IsStatic)
+                    continue;
+                
+                //Check AABB overlap and skip if no overlap is found
+                if (!Collider.OverlapAABB(rigidbodies[i].Collider, rigidbodies[j].Collider))
+                    continue;
+                
+                //Check precise collision for convex shapes
+                bool isColliding = CheckSAT(rigidbodies[i], rigidbodies[j], out Vector collisionNormal, out double penetrationDepth);
+                if (!isColliding) continue;
         
-        collisionEvent = new CollisionEvent(rigidbodyA, rigidbodyB, collisionNormal, penetrationDepth);
-        return true;
+                collisionEvents.Add(new CollisionEvent(rigidbodies[i], rigidbodies[j], collisionNormal, penetrationDepth));
+            }
+        }
+
+        return collisionEvents.ToArray();
     }
 
     private static bool CheckSAT(Rigidbody rigidbodyA, Rigidbody rigidbodyB, out Vector collisionNormal, out double penetrationDepth)
