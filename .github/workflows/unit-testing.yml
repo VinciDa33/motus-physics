@@ -23,6 +23,9 @@ jobs:
       - name: info
         run: pwd
 
+      - name: info 2
+        run: ls -R
+
       - name: Copy DLLs to the project
         run: |
           cp -r dlls/native-libs/* ./MotusPhysics.Visualizer/NativeLibs/
