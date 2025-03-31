@@ -1,5 +1,0 @@
-<Project>
-    <PropertyGroup>
-        <OutputPath>$(SolutionDir)Output\</OutputPath>
-    </PropertyGroup>
-</Project>
