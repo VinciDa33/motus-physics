@@ -10,6 +10,7 @@ public static class Motus
     public static bool IsInitialized { get; private set; } = false;
     private static string _modulePath = ".";
     private static Thread _physicsThread;
+    private static bool _loadModules = true;
     private static bool _shutdown = false;
     private static int _physicsStepsPerSecond = 50;
 
@@ -42,12 +43,17 @@ public static class Motus
         Time.FixedTimeStep = 1d / _physicsStepsPerSecond;
 
         IsInitialized = true;
-        ModuleManager.Instance.Load(_modulePath);
+        
+        if (_loadModules)
+            ModuleManager.Instance.Load(_modulePath);
+        
         DeltaStopwatch.Start();
         FixedDeltaStopwatch.Start();
         
         _physicsThread = new Thread(Update);
         _physicsThread.Start();
+        
+        Logger.Log("Motus is initialized!");
     }
 
     /// <summary>
@@ -77,10 +83,16 @@ public static class Motus
                 
                 Time.SimStep++;
                 _deltaSum -= 1d / _physicsStepsPerSecond;
+
+                if (Time.LastStepMilliseconds / 1000d > Time.FixedTimeStep)
+                    Logger.LogError($"Simulation can not keep up with update rate! \nFixed time step: {Time.FixedTimeStep} \nTime of last step: {Time.LastStepMilliseconds / 1000d} \nAt step: {Time.SimStep}");
             }
         }
 
         _shutdown = false;
+        IsInitialized = false;
+        _loadModules = true;
+        Logger.Log("Shutdown: MotusPhysics.Core");
     }
     
     private static void Step()
@@ -111,6 +123,12 @@ public static class Motus
         Time.FixedTimeStep = 1d / _physicsStepsPerSecond;
     }
 
+    public static void DisableModuleLoading()
+    {
+        _loadModules = false;
+    }
+    
+    
     /// <summary>
     /// Stops the physics thread and all loaded modules.
     /// </summary>
@@ -121,14 +139,9 @@ public static class Motus
             Logger.LogWarning("Cannot abort physics thread. It is already not running!");
             return;
         }
-        else
-        {
-            Logger.Log("Shutdown: MotusPhysics.Core");
-            _shutdown = true;
-        }
+
+        _shutdown = true;
 
         ModuleManager.Instance.ShutdownModules();
-
-        IsInitialized = false;
     }
 }

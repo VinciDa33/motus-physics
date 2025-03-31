@@ -12,7 +12,7 @@ class Program
         MotusVisualizer.WindowSize = new Vector(800*1.8, 600*1.8);
         MotusVisualizer.PixelsPerMeter = 40;
         Motus.Initialize();
-        //Motus.SetPhysicsUpdateRate(50);
+        Motus.SetPhysicsUpdateRate(2000);
         //Motus.Time.TimeScale = 1d;
         //MotusVisualizer.ShowBoundingBoxes = true;
         MotusVisualizer.ShowCollisionContactPoints = false;
