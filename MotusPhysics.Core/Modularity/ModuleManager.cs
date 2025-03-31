@@ -93,4 +93,9 @@ public sealed class ModuleManager
             Motus.Logger.Log("Shutdown: " + motusModule.GetType());
         }
     }
+
+    internal void ClearModules()
+    {
+        _motusModules.Clear();
+    }
 }

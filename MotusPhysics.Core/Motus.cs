@@ -89,6 +89,10 @@ public static class Motus
             }
         }
 
+        //If the loop exits, the core module is shutting down
+        PhysicsManager.Instance.ClearSimulation();
+        ModuleManager.Instance.ClearModules();
+        
         _shutdown = false;
         IsInitialized = false;
         _loadModules = true;
@@ -97,9 +101,6 @@ public static class Motus
     
     private static void Step()
     {
-        if (_shutdown)
-            PhysicsManager.Instance.ClearSimulation();
-        
         PhysicsManager.Instance.Update();
         ModuleManager.Instance.UpdateModules();
     }
@@ -141,7 +142,6 @@ public static class Motus
         }
 
         _shutdown = true;
-
         ModuleManager.Instance.ShutdownModules();
     }
 }

@@ -11,7 +11,7 @@ public class ModuleTestDummy : IMotusModule
 
     public void Update()
     {
-        Console.WriteLine("Dummy Updated!");
+        
     }
 
     public void Shutdown()
