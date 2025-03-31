@@ -14,6 +14,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Checkout DLLs repository
+        uses: actions/checkout@v2
+        with:
+          repository: https://github.com/VinciDa33/motus-sfml-dlls
+          path: dlls 
+
+      - name: info
+        run: pwd
+
+      - name: Copy DLLs to the project
+        run: |
+          cp -r dlls/native-libs/* ./MotusPhysics.Visualizer/NativeLibs/
+
+      - name: Copy DLLs to the project
+        run: |
+          cp -r dlls/wrappers/* ./MotusPhysics.Visualizer/Resources/
+
+
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
         with:

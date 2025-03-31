@@ -32,5 +32,4 @@ public class ModuleLoadingTest
         if (Motus.IsInitialized)
             Motus.Shutdown();
     }
-
 }
