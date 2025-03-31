@@ -26,6 +26,9 @@ jobs:
       - name: info 2
         run: ls -R
 
+      - name: Create NativeLibs directory
+        run: mkdir -p ./MotusPhysics.Visualizer/NativeLibs
+
       - name: Copy DLLs to the project
         run: |
           cp -r dlls/native-libs/* ./MotusPhysics.Visualizer/NativeLibs/
