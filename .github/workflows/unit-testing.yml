@@ -17,7 +17,7 @@ jobs:
       - name: Checkout DLLs repository
         uses: actions/checkout@v2
         with:
-          repository: https://github.com/VinciDa33/motus-sfml-dlls
+          repository: VinciDa33/motus-sfml-dlls
           path: dlls 
 
       - name: info
