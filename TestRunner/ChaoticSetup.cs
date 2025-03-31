@@ -1,6 +1,6 @@
-﻿using PhysiXSharp.Core.Physics.Bodies;
-using PhysiXSharp.Core.Physics.Colliders;
-using PhysiXSharp.Core.Utility;
+﻿using MotusPhysics.Core.Physics;
+using MotusPhysics.Core.Physics.Colliders;
+using MotusPhysics.Core.Utility;
 
 namespace TestRunner;
 
@@ -58,5 +58,6 @@ public class ChaoticSetup
 
         Rigidbody rbX = Rigidbody.CreateRigidbody(Collider.CreateCircleCollider(1d), position: new Vector(16, 4), drag: 0.1d);
         rbX.SetGravity(new Vector(0d, 3d));
+        rbX.OnCollisionEnterSubscribe(manifold => { Console.WriteLine($"Collision contact point: {manifold.RigidbodyA.Id}");});
     }
 }

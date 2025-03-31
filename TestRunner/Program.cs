@@ -1,8 +1,6 @@
-﻿using PhysiXSharp.Core;
-using PhysiXSharp.Core.Physics.Bodies;
-using PhysiXSharp.Core.Physics.Colliders;
-using PhysiXSharp.Core.Utility;
-using PhysiXSharp.Visualizer;
+﻿using MotusPhysics.Core;
+using MotusPhysics.Core.Utility;
+using MotusPhysics.Visualizer;
 
 namespace TestRunner;
 
@@ -10,29 +8,29 @@ class Program
 {
     static void Main(string[] args)
     {
-        PhysiX.SetModulePath("../../../../TestRunner/bin/Debug/net8.0");
-        PhysiXVisualizer.WindowSize = new Vector(800*1.8, 600*1.8);
-        PhysiXVisualizer.PixelsPerMeter = 40;
-        PhysiX.Initialize();
-        //PhysiX.SetPhysicsUpdateRate(50);
-        //PhysiX.Time.TimeScale = 1d;
-        //PhysiXVisualizer.ShowBoundingBoxes = true;
-        PhysiXVisualizer.ShowCollisionContactPoints = false;
-        PhysiXVisualizer.ShowRigidbodyOrigins = false;
-        //PhysiXVisualizer.ShowEdgeNormals = true;
-        PhysiXVisualizer.ShowPhysicsStepCalculationTime = false;
+        Motus.SetModulePath("../../../../TestRunner/bin/Debug/net8.0");
+        MotusVisualizer.WindowSize = new Vector(800*1.8, 600*1.8);
+        MotusVisualizer.PixelsPerMeter = 40;
+        Motus.Initialize();
+        //Motus.SetPhysicsUpdateRate(50);
+        //Motus.Time.TimeScale = 1d;
+        //MotusVisualizer.ShowBoundingBoxes = true;
+        MotusVisualizer.ShowCollisionContactPoints = false;
+        MotusVisualizer.ShowRigidbodyOrigins = false;
+        //MotusVisualizer.ShowEdgeNormals = true;
+        MotusVisualizer.ShowPhysicsStepCalculationTime = false;
         
         //ChaoticSetup.Setup();
         //StackSetup.Setup();
         //SimpleCollisionSetup.Setup();
         StressSetup.Setup();
         
-        while (PhysiXVisualizer.IsVisualizerActive())
+        while (MotusVisualizer.IsVisualizerActive())
         {
 
         }
         
-        PhysiX.Shutdown();
+        Motus.Shutdown();
         
         Console.WriteLine("Test-sim ended");
     }

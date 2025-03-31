@@ -1,6 +1,6 @@
-﻿using PhysiXSharp.Core.Physics.Bodies;
-using PhysiXSharp.Core.Physics.Colliders;
-using PhysiXSharp.Core.Utility;
+﻿using MotusPhysics.Core.Physics;
+using MotusPhysics.Core.Physics.Colliders;
+using MotusPhysics.Core.Utility;
 
 namespace TestRunner;
 
