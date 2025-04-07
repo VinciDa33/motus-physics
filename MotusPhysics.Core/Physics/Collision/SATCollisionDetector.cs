@@ -6,7 +6,7 @@ namespace MotusPhysics.Core.Physics.Collision;
 
 public static class SATCollisionDetector
 {
-    public static CollisionEvent[] CheckCollision(List<Rigidbody> rigidbodies)
+    public static CollisionEvent[] CheckCollision(List<RigidBody> rigidbodies)
     {
         List<CollisionEvent> collisionEvents = new List<CollisionEvent>();
         
@@ -41,25 +41,25 @@ public static class SATCollisionDetector
         return collisionEvents.ToArray();
     }
 
-    private static bool CheckSAT(Rigidbody rigidbodyA, Rigidbody rigidbodyB, out Vector collisionNormal, out double penetrationDepth)
+    private static bool CheckSAT(RigidBody rigidBodyA, RigidBody rigidBodyB, out Vector collisionNormal, out double penetrationDepth)
     {
         collisionNormal = Vector.Zero;
         penetrationDepth = 0d;
         
         //Circle circle collision
-        if (rigidbodyA.Collider is CircleCollider c1 && rigidbodyB.Collider is CircleCollider c2)
+        if (rigidBodyA.Collider is CircleCollider c1 && rigidBodyB.Collider is CircleCollider c2)
             return SATCircleCircle(c1, c2, out collisionNormal, out penetrationDepth);
         
         //Circle polygon collision
-        if (rigidbodyA.Collider is CircleCollider circle1 && rigidbodyB.Collider is PolygonCollider poly1)
+        if (rigidBodyA.Collider is CircleCollider circle1 && rigidBodyB.Collider is PolygonCollider poly1)
             return SATCirclePolygon(circle1, poly1, out collisionNormal, out penetrationDepth, false);
 
         //Circle polygon collision
-        if (rigidbodyA.Collider is PolygonCollider poly2 && rigidbodyB.Collider is CircleCollider circle2)
+        if (rigidBodyA.Collider is PolygonCollider poly2 && rigidBodyB.Collider is CircleCollider circle2)
             return SATCirclePolygon(circle2, poly2, out collisionNormal, out penetrationDepth, true);
 
         //Polygon polygon collision
-        if (rigidbodyA.Collider is PolygonCollider p1 && rigidbodyB.Collider is PolygonCollider p2)
+        if (rigidBodyA.Collider is PolygonCollider p1 && rigidBodyB.Collider is PolygonCollider p2)
             return SATPolygonPolygon(p1, p2, out collisionNormal, out penetrationDepth);
         
         return false;

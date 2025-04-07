@@ -10,18 +10,18 @@ public static class CollisionSeparator
         foreach (CollisionEvent collisionEvent in collisionEvents)
         {
             //Skip calculating seperation for collisions involving triggers
-            if (collisionEvent.RigidbodyA.Collider.IsTrigger || collisionEvent.RigidbodyB.Collider.IsTrigger)
+            if (collisionEvent.RigidBodyA.Collider.IsTrigger || collisionEvent.RigidBodyB.Collider.IsTrigger)
                 return;
 
             Vector correction = collisionEvent.CollisionNormal * collisionEvent.PenetrationDepth;
-            if (collisionEvent.RigidbodyA.IsStatic)
-                collisionEvent.RigidbodyB.TranslatePosition(correction);
-            else if (collisionEvent.RigidbodyB.IsStatic)
-                collisionEvent.RigidbodyA.TranslatePosition(-correction);
+            if (collisionEvent.RigidBodyA.IsStatic)
+                collisionEvent.RigidBodyB.TranslatePosition(correction);
+            else if (collisionEvent.RigidBodyB.IsStatic)
+                collisionEvent.RigidBodyA.TranslatePosition(-correction);
             else
             {
-                collisionEvent.RigidbodyA.TranslatePosition(-correction / 2d);
-                collisionEvent.RigidbodyB.TranslatePosition(correction / 2d);
+                collisionEvent.RigidBodyA.TranslatePosition(-correction / 2d);
+                collisionEvent.RigidBodyB.TranslatePosition(correction / 2d);
             }
         }
     }

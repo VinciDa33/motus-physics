@@ -1,24 +1,22 @@
-﻿using Core_Utility_Vector = MotusPhysics.Core.Utility.Vector;
-using MotusPhysics_Core_Utility_Vector = MotusPhysics.Core.Utility.Vector;
-using Utility_Vector = MotusPhysics.Core.Utility.Vector;
-using Vector = MotusPhysics.Core.Utility.Vector;
+﻿
+using MotusPhysics.Core.Utility;
 
 namespace MotusPhysics.Core.Physics.Colliders;
 
 public class PolygonCollider : Collider
 {
-    private readonly MotusPhysics_Core_Utility_Vector[] _baseVertices;
-    public MotusPhysics_Core_Utility_Vector[] Vertices { get; private set;  }
+    private readonly Vector[] _baseVertices;
+    public Vector[] Vertices { get; private set;  }
     
-    internal PolygonCollider(params MotusPhysics_Core_Utility_Vector[] points)
+    internal PolygonCollider(params Vector[] points)
     {
-        _baseVertices = new MotusPhysics_Core_Utility_Vector[points.Length];
-        Vertices = new MotusPhysics_Core_Utility_Vector[points.Length];
+        _baseVertices = new Vector[points.Length];
+        Vertices = new Vector[points.Length];
         
         for (int i = 0; i < points.Length; i++)
         {
-            _baseVertices[i] = (MotusPhysics_Core_Utility_Vector) points[i].Clone();
-            Vertices[i] = (MotusPhysics_Core_Utility_Vector)points[i].Clone();
+            _baseVertices[i] = (Vector) points[i].Clone();
+            Vertices[i] = (Vector)points[i].Clone();
         }
     }
 
@@ -29,7 +27,7 @@ public class PolygonCollider : Collider
         double largestX = Vertices[0].x;
         double largestY = Vertices[0].y;
 
-        foreach (MotusPhysics_Core_Utility_Vector vertex in Vertices)
+        foreach (Vector vertex in Vertices)
         {
             if (vertex.x < smallestX)
                 smallestX = vertex.x;
@@ -41,8 +39,8 @@ public class PolygonCollider : Collider
                 largestY = vertex.y;
         }
 
-        MotusPhysics_Core_Utility_Vector min =  new MotusPhysics_Core_Utility_Vector(smallestX, smallestY);
-        MotusPhysics_Core_Utility_Vector max = new MotusPhysics_Core_Utility_Vector(largestX, largestY);
+        Vector min =  new Vector(smallestX, smallestY);
+        Vector max = new Vector(largestX, largestY);
 
         AABB aabb = new AABB(min, max);
         AxisAlignedBoundingBox = aabb;
@@ -51,11 +49,11 @@ public class PolygonCollider : Collider
 
     internal override void CalculateNormals()
     {
-        MotusPhysics_Core_Utility_Vector[] normals = new MotusPhysics_Core_Utility_Vector[Vertices.Length];
+        Vector[] normals = new Vector[Vertices.Length];
 
         for (int i = 0; i < Vertices.Length; i++)
         {
-            MotusPhysics_Core_Utility_Vector edge = Vertices[(i + 1) % Vertices.Length] - Vertices[i];
+            Vector edge = Vertices[(i + 1) % Vertices.Length] - Vertices[i];
             normals[i] = edge.Normal();
         }
         Normals = normals;
@@ -64,9 +62,9 @@ public class PolygonCollider : Collider
     internal override void UpdateRotation()
     {
         double rotation = Rigidbody?.Rotation ?? 0d;
-        MotusPhysics_Core_Utility_Vector[] newVertices = new MotusPhysics_Core_Utility_Vector[_baseVertices.Length];
+        Vector[] newVertices = new Vector[_baseVertices.Length];
         for (int i = 0; i < _baseVertices.Length; i++)
-            newVertices[i] = ((MotusPhysics_Core_Utility_Vector) _baseVertices[i].Clone()).Rotated(rotation);
+            newVertices[i] = ((Vector) _baseVertices[i].Clone()).Rotated(rotation);
         
         Vertices = newVertices;
         

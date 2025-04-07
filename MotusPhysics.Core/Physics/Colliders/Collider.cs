@@ -6,14 +6,15 @@ public abstract class Collider
 {
     public bool IsEnabled { get; private set; } = true;
     public bool IsTrigger { get; private set; } = false;
-    public Rigidbody? Rigidbody { get; private set; }
+    public bool IsRayCastTarget { get; private set; } = true;
+    public RigidBody? Rigidbody { get; private set; }
     public Vector Position => Rigidbody == null ? Vector.Zero : Rigidbody.Position;
     public AABB AxisAlignedBoundingBox { get; protected set; }
     public Vector[] Normals { get; protected set; } = [];
     
-    public void SetRigidbody(Rigidbody rigidbody)
+    public void SetRigidbody(RigidBody rigidBody)
     {
-        Rigidbody = rigidbody;
+        Rigidbody = rigidBody;
         CalculateAABB();
         CalculateNormals();
     }
@@ -26,6 +27,11 @@ public abstract class Collider
     public void SetTrigger(bool setTrigger)
     {
         IsTrigger = setTrigger;
+    }
+
+    public void SetRayCastTarget(bool setRayCastTarget)
+    {
+        IsRayCastTarget = setRayCastTarget;
     }
     
     internal abstract void CalculateAABB();

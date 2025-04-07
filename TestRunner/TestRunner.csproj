@@ -9,7 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MotusPhysics.Core\MotusPhysics.Core.csproj" />
-      <ProjectReference Include="..\MotusPhysics.Raycasting\MotusPhysics.Raycasting.csproj" />
+      <ProjectReference Include="..\MotusPhysics.RayCasting\MotusPhysics.RayCasting.csproj" />
       <ProjectReference Include="..\MotusPhysics.Visualizer\MotusPhysics.Visualizer.csproj" />
     </ItemGroup>
 

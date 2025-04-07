@@ -16,8 +16,8 @@ public class SimpleImpulseSolver
         
         foreach (CollisionResolution resolution in resolutions)
         {
-            resolution.RigidbodyA.AddVelocity(resolution.VelocityChangeA);
-            resolution.RigidbodyB.AddVelocity(resolution.VelocityChangeB);
+            resolution.RigidBodyA.AddVelocity(resolution.VelocityChangeA);
+            resolution.RigidBodyB.AddVelocity(resolution.VelocityChangeB);
         }
     }
 
@@ -26,44 +26,44 @@ public class SimpleImpulseSolver
         Vector velocityChangeA = Vector.Zero;
         Vector velocityChangeB = Vector.Zero;
 
-        if (!manifold.RigidbodyA.IsStatic && !manifold.RigidbodyB.IsStatic)
+        if (!manifold.RigidBodyA.IsStatic && !manifold.RigidBodyB.IsStatic)
         {
             foreach (Vector contactPoint in manifold.ContactPoints)
             {
-                SolveRigidbodyRigidbody(manifold.RigidbodyA, manifold.RigidbodyB, manifold.CollisionNormal, manifold.ContactPoints.Length, out Vector velA, out Vector velB);
+                SolveRigidbodyRigidbody(manifold.RigidBodyA, manifold.RigidBodyB, manifold.CollisionNormal, manifold.ContactPoints.Length, out Vector velA, out Vector velB);
                 velocityChangeA += velA;
                 velocityChangeB += velB;
             }
-            return new CollisionResolution(manifold.RigidbodyA, manifold.RigidbodyB, velocityChangeA, velocityChangeB, 0d, 0d);
+            return new CollisionResolution(manifold.RigidBodyA, manifold.RigidBodyB, velocityChangeA, velocityChangeB, 0d, 0d);
         }
 
-        if (manifold.RigidbodyB.IsStatic)
+        if (manifold.RigidBodyB.IsStatic)
         {
             foreach (Vector contactPoint in manifold.ContactPoints)
             {
-                SolveRigidbodyStaticbody(manifold.RigidbodyA, manifold.RigidbodyB, manifold.CollisionNormal, manifold.ContactPoints.Length, out Vector velA, out Vector velB);
+                SolveRigidbodyStaticbody(manifold.RigidBodyA, manifold.RigidBodyB, manifold.CollisionNormal, manifold.ContactPoints.Length, out Vector velA, out Vector velB);
                 velocityChangeA += velA;
                 velocityChangeB += velB;
             }
-            return new CollisionResolution(manifold.RigidbodyA, manifold.RigidbodyB, velocityChangeA, velocityChangeB, 0d, 0d);
+            return new CollisionResolution(manifold.RigidBodyA, manifold.RigidBodyB, velocityChangeA, velocityChangeB, 0d, 0d);
         }
 
-        if (manifold.RigidbodyA.IsStatic)
+        if (manifold.RigidBodyA.IsStatic)
         {
             foreach (Vector contactPoint in manifold.ContactPoints)
             {
                 //Flip the rigidbodies and the normal when rigid body A is static
-                SolveRigidbodyStaticbody(manifold.RigidbodyB, manifold.RigidbodyA, -manifold.CollisionNormal, manifold.ContactPoints.Length, out Vector velA, out Vector velB);
+                SolveRigidbodyStaticbody(manifold.RigidBodyB, manifold.RigidBodyA, -manifold.CollisionNormal, manifold.ContactPoints.Length, out Vector velA, out Vector velB);
                 velocityChangeA += velA;
                 velocityChangeB += velB;
             }
-            return new CollisionResolution(manifold.RigidbodyB, manifold.RigidbodyA, velocityChangeA, velocityChangeB, 0d, 0d);
+            return new CollisionResolution(manifold.RigidBodyB, manifold.RigidBodyA, velocityChangeA, velocityChangeB, 0d, 0d);
         }
 
-        return new CollisionResolution(manifold.RigidbodyA, manifold.RigidbodyB, velocityChangeA, velocityChangeB, 0d, 0d);
+        return new CollisionResolution(manifold.RigidBodyA, manifold.RigidBodyB, velocityChangeA, velocityChangeB, 0d, 0d);
     }
     
-    private static void SolveRigidbodyRigidbody(Rigidbody rbA, Rigidbody rbB, Vector collisionNormal, int contactCount, out Vector velA, out Vector velB)
+    private static void SolveRigidbodyRigidbody(RigidBody rbA, RigidBody rbB, Vector collisionNormal, int contactCount, out Vector velA, out Vector velB)
     {
         velA = Vector.Zero;
         velB = Vector.Zero;
@@ -85,7 +85,7 @@ public class SimpleImpulseSolver
         velB = impulse * rbB.InverseMass;
     }
 
-    private static void SolveRigidbodyStaticbody(Rigidbody rb, Rigidbody staticRb, Vector collisionNormal, int contactCount, out Vector velA, out Vector velB)
+    private static void SolveRigidbodyStaticbody(RigidBody rb, RigidBody staticRb, Vector collisionNormal, int contactCount, out Vector velA, out Vector velB)
     {
         velA = Vector.Zero;
         velB = Vector.Zero;
