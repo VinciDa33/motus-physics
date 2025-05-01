@@ -28,9 +28,9 @@ public static class MotusVisualizer
     public static bool ShowPhysicsStepCalculationTime = false;
     public static bool ShowCollisionShapes = true;
     public static bool ShowBoundingBoxes = false;
-    public static bool ShowRigidbodyOrigins = true;
+    public static bool ShowRigidbodyOrigins = false;
     public static bool ShowEdgeNormals = false;
-    public static bool ShowCollisionContactPoints = true;
+    public static bool ShowCollisionContactPoints = false;
     
     private static Thread? _visualizationThread = null;
     private static VisualizationRunner runner;
@@ -67,22 +67,5 @@ public static class MotusVisualizer
     public static Vector GetViewportSizeInMeters()
     {
         return WindowSize / PixelsPerMeter;
-    }
-
-    public static void DrawLine(Vector point1, Vector point2)
-    {
-        Vertex[] line = new Vertex[2];
-        line[0] = new Vertex(new Vector2f((float)point1.x, (float)point1.y) * PixelsPerMeter, new Color(250, 250, 250));
-        line[1] = new Vertex(new Vector2f((float)point2.x, (float)point2.y) * PixelsPerMeter, new Color(250, 250, 250));
-        runner._linesToRender.Add(line);
-    }
-
-    public static void DrawCircle(Vector point, double radius)
-    {
-        runner._shapesToRender.Add(new CircleShape((float) radius)
-        {
-            FillColor = new Color(250, 250, 250),
-            Position = new Vector2f((float) point.x, (float) point.y) * PixelsPerMeter - new Vector2f(1, 1)
-        });
     }
 }

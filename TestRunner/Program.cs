@@ -23,7 +23,7 @@ class Program
         //MotusVisualizer.ShowEdgeNormals = true;
         MotusVisualizer.ShowPhysicsStepCalculationTime = false;
         
-        //ChaoticSetup.Setup();
+        ChaoticSetup.Setup();
         //StackSetup.Setup();
         //SimpleCollisionSetup.Setup();
         //StressSetup.Setup();

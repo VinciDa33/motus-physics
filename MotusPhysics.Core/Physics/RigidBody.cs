@@ -93,6 +93,7 @@ public sealed class RigidBody
         AngularDragCoefficient = angularDragCoefficient;
         Collider = collider;
         collider.SetRigidbody(this);
+        Collider.UpdateRotation();
     }
 
     public void Destroy()

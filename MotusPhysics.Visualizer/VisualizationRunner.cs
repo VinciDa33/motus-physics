@@ -16,7 +16,7 @@ internal class VisualizationRunner
     internal readonly List<Vertex[]> _linesToRender = new List<Vertex[]>();
     internal bool Shutdown = false;
     
-    public void RunVisualization()
+    internal void RunVisualization()
     {
         VideoMode videoMode = new VideoMode((uint)MotusVisualizer.WindowSize.x, (uint)MotusVisualizer.WindowSize.y);
         RenderWindow window = new RenderWindow(videoMode, "Motus Visualizer");
