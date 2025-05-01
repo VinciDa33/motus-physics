@@ -11,12 +11,12 @@ namespace MotusPhysics.Visualizer;
 
 internal class VisualizationRunner
 {
-    private readonly List<Shape> _shapesToRender = new List<Shape>();
-    private readonly List<Vertex[]> _lineShapesToRender = new List<Vertex[]>();
-    private readonly List<Vertex[]> _linesToRender = new List<Vertex[]>();
+    internal readonly List<Shape> _shapesToRender = new List<Shape>();
+    internal readonly List<Vertex[]> _lineShapesToRender = new List<Vertex[]>();
+    internal readonly List<Vertex[]> _linesToRender = new List<Vertex[]>();
     internal bool Shutdown = false;
     
-    public void RunVisualization()
+    internal void RunVisualization()
     {
         VideoMode videoMode = new VideoMode((uint)MotusVisualizer.WindowSize.x, (uint)MotusVisualizer.WindowSize.y);
         RenderWindow window = new RenderWindow(videoMode, "Motus Visualizer");
@@ -62,7 +62,7 @@ internal class VisualizationRunner
         _linesToRender.Clear();
         
         PhysicsManager physicsManager = PhysicsManager.Instance;
-        List<Rigidbody> rigidbodies = physicsManager.GetRigidbodies();
+        List<RigidBody> rigidbodies = physicsManager.GetRigidbodies();
         
         if (MotusVisualizer.ShowCollisionShapes)
             GenerateCollisionShapes(rigidbodies);
@@ -76,9 +76,9 @@ internal class VisualizationRunner
             GenerateContactPoints(physicsManager.Manifolds);
     }
 
-    private void GenerateCollisionShapes(List<Rigidbody> rigidbodies)
+    private void GenerateCollisionShapes(List<RigidBody> rigidbodies)
     {
-        foreach (Rigidbody rigidbody in rigidbodies)
+        foreach (RigidBody rigidbody in rigidbodies)
         {
             if (rigidbody.Collider is CircleCollider circleCollider)
             {
@@ -108,9 +108,9 @@ internal class VisualizationRunner
         }
     }
     
-    private void GenerateAABBShapes(List<Rigidbody> rigidbodies)
+    private void GenerateAABBShapes(List<RigidBody> rigidbodies)
     {
-        foreach (Rigidbody rigidbody in rigidbodies)
+        foreach (RigidBody rigidbody in rigidbodies)
         {
             AABB aabb = rigidbody.Collider.AxisAlignedBoundingBox; 
             Vector size = new Vector(aabb.Max.x - aabb.Min.x, aabb.Max.y - aabb.Min.y) * MotusVisualizer.PixelsPerMeter;
@@ -124,9 +124,9 @@ internal class VisualizationRunner
         }
     }
     
-    private void GeneratePhysicsOrigins(List<Rigidbody> rigidbodies)
+    private void GeneratePhysicsOrigins(List<RigidBody> rigidbodies)
     {
-        foreach (Rigidbody rigidbody in rigidbodies)
+        foreach (RigidBody rigidbody in rigidbodies)
         {
             _shapesToRender.Add(new CircleShape(2f)
             {
@@ -136,9 +136,9 @@ internal class VisualizationRunner
         }
     }
 
-    private void GenerateNormals(List<Rigidbody> rigidbodies)
+    private void GenerateNormals(List<RigidBody> rigidbodies)
     {
-        foreach (Rigidbody rigidbody in rigidbodies)
+        foreach (RigidBody rigidbody in rigidbodies)
         {
             if (rigidbody.Collider is PolygonCollider polygonCollider)
             {

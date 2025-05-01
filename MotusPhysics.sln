@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotusPhysics.Core", "MotusP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotusPhysics.Core.Testing", "MotusPhysics.Core.Testing\MotusPhysics.Core.Testing.csproj", "{885A9CFD-AF7D-40DC-886A-E0C11A393DE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotusPhysics.Raycasting", "MotusPhysics.Raycasting\MotusPhysics.Raycasting.csproj", "{37E126B5-0E45-4A2C-9024-F0C64DDCFBE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotusPhysics.RayCasting", "MotusPhysics.RayCasting\MotusPhysics.RayCasting.csproj", "{37E126B5-0E45-4A2C-9024-F0C64DDCFBE7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotusPhysics.Visualizer", "MotusPhysics.Visualizer\MotusPhysics.Visualizer.csproj", "{A2E69353-B006-43A0-834E-18BA1587BA02}"
 EndProject

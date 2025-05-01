@@ -24,36 +24,36 @@ public class PhysicsManager
     
     
     private int _rigidbodyIdTracker = 0;
-    private readonly List<Rigidbody> _rigidbodies = new List<Rigidbody>();
+    private readonly List<RigidBody> _rigidbodies = new List<RigidBody>();
     //Buffers
-    private readonly List<Rigidbody> _newRigidbodiesBuffer = new List<Rigidbody>();
-    private readonly List<Rigidbody> _removeRigidbodiesBuffer = new List<Rigidbody>();
+    private readonly List<RigidBody> _newRigidbodiesBuffer = new List<RigidBody>();
+    private readonly List<RigidBody> _removeRigidbodiesBuffer = new List<RigidBody>();
     
     public List<CollisionManifold> Manifolds { get; private set; } = new List<CollisionManifold>();
     private bool _clearSimulation = false;
     
     /// <summary>
-    /// Schedule a rigidbody to be added into the system.
+    /// Schedule a rigidBody to be added into the system.
     /// The actual addition will occur on the following physics step.
     /// </summary>
-    /// <param name="rigidbody"></param>
-    internal void AddRigidbody(Rigidbody rigidbody)
+    /// <param name="rigidBody"></param>
+    internal void AddRigidbody(RigidBody rigidBody)
     {
-        _newRigidbodiesBuffer.Add(rigidbody);
+        _newRigidbodiesBuffer.Add(rigidBody);
     }
     /// <summary>
-    ///  Schedule a rigidbody to be removed from the system.
+    ///  Schedule a rigidBody to be removed from the system.
     /// The actual removal will occur on the following physics step.
     /// </summary>
-    /// <param name="rigidbody"></param>
-    internal void RemoveRigidbody(Rigidbody rigidbody)
+    /// <param name="rigidBody"></param>
+    internal void RemoveRigidbody(RigidBody rigidBody)
     {
-        _removeRigidbodiesBuffer.Add(rigidbody);
+        _removeRigidbodiesBuffer.Add(rigidBody);
     }
     
-    public List<Rigidbody> GetRigidbodies()
+    public List<RigidBody> GetRigidbodies()
     {
-        return new List<Rigidbody>(_rigidbodies);
+        return new List<RigidBody>(_rigidbodies);
     }
     
     internal int GetUniqueRigidbodyId()
@@ -68,7 +68,7 @@ public class PhysicsManager
         HandleBuffers();
         
         //Update all active rigidbodies
-        foreach (Rigidbody rigidbody in _rigidbodies)
+        foreach (RigidBody rigidbody in _rigidbodies)
         {
             if (!rigidbody.IsActive)
                 continue;
@@ -86,17 +86,17 @@ public class PhysicsManager
         //Find contact points of each collision
         foreach (CollisionEvent collisionEvent in collisionEvents)
         {
-            Vector[] contactPoints = ContactPointFinder.FindContactPoints(collisionEvent.RigidbodyA.Collider, collisionEvent.RigidbodyB.Collider);
+            Vector[] contactPoints = ContactPointFinder.FindContactPoints(collisionEvent.RigidBodyA.Collider, collisionEvent.RigidBodyB.Collider);
             
             CollisionManifold manifold = new CollisionManifold(collisionEvent, contactPoints, Motus.Time.SimStep);
             newManifolds.Add(manifold);
-            manifold.RigidbodyA.OnCollision(manifold);
-            manifold.RigidbodyB.OnCollision(manifold);
+            manifold.RigidBodyA.OnCollision(manifold);
+            manifold.RigidBodyB.OnCollision(manifold);
         }
         
         Manifolds = newManifolds;
 
-        //Solve applied forces on each rigidbody
+        //Solve applied forces on each rigidBody
         ImpulseSolver.SolveCollisions(Manifolds.ToArray());
 
         //Clear out the simulation if the clear flag has been set
@@ -111,8 +111,8 @@ public class PhysicsManager
 
     private void HandleBuffers()
     {
-        List<Rigidbody> newRigidbodies = new List<Rigidbody>(_newRigidbodiesBuffer);
-        List<Rigidbody> removeRigidbodies = new List<Rigidbody>(_removeRigidbodiesBuffer);
+        List<RigidBody> newRigidbodies = new List<RigidBody>(_newRigidbodiesBuffer);
+        List<RigidBody> removeRigidbodies = new List<RigidBody>(_removeRigidbodiesBuffer);
         
         _rigidbodies.AddRange(newRigidbodies);
         _rigidbodies.RemoveRange(removeRigidbodies);

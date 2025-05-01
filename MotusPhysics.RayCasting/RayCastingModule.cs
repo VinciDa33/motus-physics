@@ -1,9 +1,9 @@
 ﻿using MotusPhysics.Core;
 using MotusPhysics.Core.Modularity;
 
-namespace MotusPhysics.Raycasting;
+namespace MotusPhysics.RayCasting;
 
-public class RaycastingModule : IMotusModule
+public class RayCastingModule : IMotusModule
 {
     public void Initialize()
     {

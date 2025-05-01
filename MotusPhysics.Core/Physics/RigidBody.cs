@@ -4,7 +4,7 @@ using MotusPhysics.Core.Utility;
 
 namespace MotusPhysics.Core.Physics;
 
-public sealed class Rigidbody
+public sealed class RigidBody
 {
     
     public readonly int Id;
@@ -33,14 +33,14 @@ public sealed class Rigidbody
     public double AngularVelocityDegrees { get; private set; } 
     
     /// <summary>
-    /// Arbitrary value for the mass of the rigidbody.
+    /// Arbitrary value for the mass of the rigidBody.
     /// Represents the resistance to change in velocity upon collision.
     /// </summary>
     public double Mass { get; private set; } = 1d;
     public double InverseMass { get; private set; } = 1d;
     
     /// <summary>
-    /// Arbitrary value for the moment of inertia of the rigidbody.
+    /// Arbitrary value for the moment of inertia of the rigidBody.
     /// Represents the resistance to change in angular velocity upon collision.
     /// </summary>
     public double Inertia { get; private set; } = 1d;
@@ -72,7 +72,7 @@ public sealed class Rigidbody
         new Dictionary<(int, int), CollisionManifold>();
     
     
-    private Rigidbody(Vector position, double rotation, Vector initialVelocity, double initialAngularVelocity, double mass, double inertia, 
+    private RigidBody(Vector position, double rotation, Vector initialVelocity, double initialAngularVelocity, double mass, double inertia, 
         Vector gravity, double dragCoefficient, double angularDragCoefficient, double restitution, Collider collider, bool staticBody)
     {
         Id = PhysicsManager.Instance.GetUniqueRigidbodyId();
@@ -93,6 +93,7 @@ public sealed class Rigidbody
         AngularDragCoefficient = angularDragCoefficient;
         Collider = collider;
         collider.SetRigidbody(this);
+        Collider.UpdateRotation();
     }
 
     public void Destroy()
@@ -140,8 +141,8 @@ public sealed class Rigidbody
     internal void OnCollision(CollisionManifold manifold)
     {
         //Create a key using the 2 id's in sorted order
-        int idA = manifold.RigidbodyA.Id;
-        int idB = manifold.RigidbodyB.Id;
+        int idA = manifold.RigidBodyA.Id;
+        int idB = manifold.RigidBodyB.Id;
         (int, int) key = (Math.Min(idA, idB), Math.Max(idA, idB));
         
         //If the key does not already exist, it must be a new collision
@@ -158,7 +159,7 @@ public sealed class Rigidbody
     }
     
     /// <summary>
-    /// Set the absolute position of the rigidbody to a new position.
+    /// Set the absolute position of the rigidBody to a new position.
     /// </summary>
     /// <param name="position"></param>
     public void SetPosition(Vector position)
@@ -167,7 +168,7 @@ public sealed class Rigidbody
     }
 
     /// <summary>
-    /// Moves the rigidbody by the specified translation value.
+    /// Moves the rigidBody by the specified translation value.
     /// </summary>
     /// <param name="translation"></param>
     public void TranslatePosition(Vector translation)
@@ -176,7 +177,7 @@ public sealed class Rigidbody
     }
     
     /// <summary>
-    /// Sets the absolute rotation of the rigidbody in degrees.
+    /// Sets the absolute rotation of the rigidBody in degrees.
     /// </summary>
     /// <param name="degrees"></param>
     public void SetRotation(double degrees)
@@ -186,7 +187,7 @@ public sealed class Rigidbody
     }
 
     /// <summary>
-    /// Rotates the rigidbody by a specified amount of degrees.
+    /// Rotates the rigidBody by a specified amount of degrees.
     /// </summary>
     /// <param name="degrees"></param>
     public void Rotate(double degrees)
@@ -253,113 +254,113 @@ public sealed class Rigidbody
     
     #region Factories
 
-    public static Rigidbody CreateRigidbody(Vector position, Collider collider)
+    public static RigidBody CreateRigidBody(Vector position, Collider collider)
     {
-        return new Rigidbody(position, 0d, Vector.Zero, 0d, 1d, 1d, Vector.Zero, 0d, 0d, 0.4d, collider, false);
+        return new RigidBody(position, 0d, Vector.Zero, 0d, 1d, 1d, Vector.Zero, 0d, 0d, 0.4d, collider, false);
     }
 
-    public static Rigidbody CreateRigidbody(Vector position, double rotation, Collider collider)
+    public static RigidBody CreateRigidBody(Vector position, double rotation, Collider collider)
     {
-        return new Rigidbody(position, rotation, Vector.Zero, 0d, 1d, 1d, Vector.Zero, 0d, 0d, 0.4d, collider, false);
+        return new RigidBody(position, rotation, Vector.Zero, 0d, 1d, 1d, Vector.Zero, 0d, 0d, 0.4d, collider, false);
     }
 
-    public static Rigidbody CreateRigidbody(Vector position, double rotation, Collider collider, double mass, double inertia,
+    public static RigidBody CreateRigidBody(Vector position, double rotation, Collider collider, double mass, double inertia,
         double restitution)
     {
         if (mass <= 0d)
         {
             //TODO: Specify grams or kilograms!
-            Motus.Logger.LogError("Rigidbody mass can not be 0 or less!\nThe mass has been set to 0.05");
+            Motus.Logger.LogError("RigidBody mass can not be 0 or less!\nThe mass has been set to 0.05");
             mass = 0.05d;
         }
 
         if (inertia < 0)
         {
-            Motus.Logger.LogError("Rigidbody moment of inertia can not be less than 0!\nThe inertia has been set to 0.");
+            Motus.Logger.LogError("RigidBody moment of inertia can not be less than 0!\nThe inertia has been set to 0.");
             inertia = 0d;
         }
         
         if (restitution > 1d)
         {
             restitution = 1d;
-            Motus.Logger.LogWarning("Rigidbody restitution must be between 0 and 1.\nValue has been clamped to 1.");
+            Motus.Logger.LogWarning("RigidBody restitution must be between 0 and 1.\nValue has been clamped to 1.");
         }
         
         if (restitution < 0d)
         {
             restitution = 0d;
-            Motus.Logger.LogWarning("Rigidbody restitution must be between 0 and 1.\nValue has been clamped to 0.");
+            Motus.Logger.LogWarning("RigidBody restitution must be between 0 and 1.\nValue has been clamped to 0.");
         }
         
-        return new Rigidbody(position, rotation, Vector.Zero, 0d, mass, inertia, Vector.Zero, 0d, 0d, restitution, collider, false);
+        return new RigidBody(position, rotation, Vector.Zero, 0d, mass, inertia, Vector.Zero, 0d, 0d, restitution, collider, false);
     }
 
-    public static Rigidbody CreateRigidbody(Vector position, double rotation, Collider collider, Vector initialVelocity,
+    public static RigidBody CreateRigidBody(Vector position, double rotation, Collider collider, Vector initialVelocity,
         double initialAngularVelocity, double mass, double inertia,
         double restitution)
     {
         if (mass <= 0d)
         {
             //TODO: Specify grams or kilograms!
-            Motus.Logger.LogError("Rigidbody mass can not be 0 or less!\nThe mass has been set to 0.05");
+            Motus.Logger.LogError("RigidBody mass can not be 0 or less!\nThe mass has been set to 0.05");
             mass = 0.05d;
         }
 
         if (inertia < 0)
         {
-            Motus.Logger.LogError("Rigidbody moment of inertia can not be less than 0!\nThe inertia has been set to 0.");
+            Motus.Logger.LogError("RigidBody moment of inertia can not be less than 0!\nThe inertia has been set to 0.");
             inertia = 0d;
         }
         
         if (restitution > 1d || restitution < 0d)
         {
             restitution = restitution > 1d ? 1d : 0d;
-            Motus.Logger.LogWarning("Rigidbody restitution must be between 0 and 1.\nValue has been clamped.");
+            Motus.Logger.LogWarning("RigidBody restitution must be between 0 and 1.\nValue has been clamped.");
         }
         
-        return new Rigidbody(position, rotation, initialVelocity, initialAngularVelocity, mass, inertia, Vector.Zero, 0d, 0d, restitution, collider, false);
+        return new RigidBody(position, rotation, initialVelocity, initialAngularVelocity, mass, inertia, Vector.Zero, 0d, 0d, restitution, collider, false);
     }
     
-    public static Rigidbody CreateRigidbody(Vector position, double rotation, Collider collider, Vector initialVelocity,
+    public static RigidBody CreateRigidBody(Vector position, double rotation, Collider collider, Vector initialVelocity,
         double initialAngularVelocity, double mass, double inertia, double drag, double angularDrag,
         double restitution)
     {
         if (mass <= 0d)
         {
             //TODO: Specify grams or kilograms!
-            Motus.Logger.LogError("Rigidbody mass can not be 0 or less!\nThe mass has been set to 0.05");
+            Motus.Logger.LogError("RigidBody mass can not be 0 or less!\nThe mass has been set to 0.05");
             mass = 0.05d;
         }
 
         if (inertia < 0)
         {
-            Motus.Logger.LogError("Rigidbody moment of inertia can not be less than 0!\nThe inertia has been set to 0.");
+            Motus.Logger.LogError("RigidBody moment of inertia can not be less than 0!\nThe inertia has been set to 0.");
             inertia = 0d;
         }
         
         if (restitution > 1d || restitution < 0d)
         {
             restitution = restitution > 1d ? 1d : 0d;
-            Motus.Logger.LogWarning("Rigidbody restitution must be between 0 and 1.\nValue has been clamped.");
+            Motus.Logger.LogWarning("RigidBody restitution must be between 0 and 1.\nValue has been clamped.");
         }
 
         if (drag > 1d || drag < 0d)
         {
             drag = drag > 1d ? 1d : 0d;
-            Motus.Logger.LogWarning("Rigidbody drag coefficient must be between 0 and 1.\nValue has been clamped.");
+            Motus.Logger.LogWarning("RigidBody drag coefficient must be between 0 and 1.\nValue has been clamped.");
         }
         
         if (angularDrag > 1d || angularDrag < 0d)
         {
             angularDrag = angularDrag > 1d ? 1d : 0d;
-            Motus.Logger.LogWarning("Rigidbody angular drag coefficient must be between 0 and 1.\nValue has been clamped.");
+            Motus.Logger.LogWarning("RigidBody angular drag coefficient must be between 0 and 1.\nValue has been clamped.");
         }
         
-        return new Rigidbody(position, rotation, initialVelocity, initialAngularVelocity, mass, inertia, Vector.Zero, drag, angularDrag, restitution, collider, false);
+        return new RigidBody(position, rotation, initialVelocity, initialAngularVelocity, mass, inertia, Vector.Zero, drag, angularDrag, restitution, collider, false);
     }
     
     //Optional parameter factory
-    public static Rigidbody CreateRigidbody(Collider collider, Vector? position = null, double rotation = 0d, Vector? initialVelocity = null,
+    public static RigidBody CreateRigidBody(Collider collider, Vector? position = null, double rotation = 0d, Vector? initialVelocity = null,
         double initialAngularVelocity = 0d, double mass = 1d, double inertia = 1d, double drag = 0d, double angularDrag = 0d,
         double restitution = 0.4d)
     {
@@ -369,51 +370,51 @@ public sealed class Rigidbody
         if (mass <= 0d)
         {
             //TODO: Specify grams or kilograms!
-            Motus.Logger.LogError("Rigidbody mass can not be 0 or less!\nThe mass has been set to 0.05");
+            Motus.Logger.LogError("RigidBody mass can not be 0 or less!\nThe mass has been set to 0.05");
             mass = 0.05d;
         }
 
         if (inertia < 0)
         {
-            Motus.Logger.LogError("Rigidbody moment of inertia can not be less than 0!\nThe inertia has been set to 0.");
+            Motus.Logger.LogError("RigidBody moment of inertia can not be less than 0!\nThe inertia has been set to 0.");
             inertia = 0d;
         }
         
         if (restitution > 1d || restitution < 0d)
         {
             restitution = restitution > 1d ? 1d : 0d;
-            Motus.Logger.LogWarning("Rigidbody restitution must be between 0 and 1.\nValue has been clamped.");
+            Motus.Logger.LogWarning("RigidBody restitution must be between 0 and 1.\nValue has been clamped.");
         }
 
         if (drag > 1d || drag < 0d)
         {
             drag = drag > 1d ? 1d : 0d;
-            Motus.Logger.LogWarning("Rigidbody drag coefficient must be between 0 and 1.\nValue has been clamped.");
+            Motus.Logger.LogWarning("RigidBody drag coefficient must be between 0 and 1.\nValue has been clamped.");
         }
         
         if (angularDrag > 1d || angularDrag < 0d)
         {
             angularDrag = angularDrag > 1d ? 1d : 0d;
-            Motus.Logger.LogWarning("Rigidbody angular drag coefficient must be between 0 and 1.\nValue has been clamped.");
+            Motus.Logger.LogWarning("RigidBody angular drag coefficient must be between 0 and 1.\nValue has been clamped.");
         }
         
-        return new Rigidbody(position, rotation, initialVelocity, initialAngularVelocity, mass, inertia, Vector.Zero, drag, angularDrag, restitution, collider, false);
+        return new RigidBody(position, rotation, initialVelocity, initialAngularVelocity, mass, inertia, Vector.Zero, drag, angularDrag, restitution, collider, false);
     }
     
-    public static Rigidbody CreateStaticbody(Vector position, Collider collider)
+    public static RigidBody CreateStaticBody(Vector position, Collider collider)
     {
-        return new Rigidbody(position, 0d, Vector.Zero, 0d, 1d, 1d, Vector.Zero, 0d, 0d, 0.4d, collider, true);
+        return new RigidBody(position, 0d, Vector.Zero, 0d, 1d, 1d, Vector.Zero, 0d, 0d, 0.4d, collider, true);
     }
 
-    public static Rigidbody CreateStaticbody(Vector position, double rotation, Collider collider)
+    public static RigidBody CreateStaticBody(Vector position, double rotation, Collider collider)
     {
-        return new Rigidbody(position, rotation, Vector.Zero, 0d, 1d, 1d, Vector.Zero, 0d, 0d, 0.4d, collider, true);
+        return new RigidBody(position, rotation, Vector.Zero, 0d, 1d, 1d, Vector.Zero, 0d, 0d, 0.4d, collider, true);
     }
 
-    public static Rigidbody CreateStaticbody(Collider collider, Vector? position = null, double rotation = 0d, double restitution = 0.4d)
+    public static RigidBody CreateStaticBody(Collider collider, Vector? position = null, double rotation = 0d, double restitution = 0.4d)
     {
         position ??= Vector.Zero;
-        return new Rigidbody(position, rotation, Vector.Zero, 0d, 1d, 1d, Vector.Zero, 0d, 0d, restitution, collider, true);
+        return new RigidBody(position, rotation, Vector.Zero, 0d, 1d, 1d, Vector.Zero, 0d, 0d, restitution, collider, true);
     }
     #endregion
 }

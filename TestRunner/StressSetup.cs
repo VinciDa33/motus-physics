@@ -10,10 +10,10 @@ public class StressSetup
     {
         int rigidbodyCount = 100;
         
-        Rigidbody floor = Rigidbody.CreateStaticbody(Collider.CreateRectangleCollider(new Vector(28, 1)), position: new Vector(16, 22), restitution: 1d);
-        Rigidbody wallLeft = Rigidbody.CreateStaticbody(Collider.CreateRectangleCollider(new Vector(1, 20)), position: new Vector(2, 12), restitution: 1d);
-        Rigidbody wallRight = Rigidbody.CreateStaticbody(Collider.CreateRectangleCollider(new Vector(1, 20)), position: new Vector(30, 12), restitution: 1d);
-        Rigidbody roof = Rigidbody.CreateStaticbody(Collider.CreateRectangleCollider(new Vector(28, 1)), position: new Vector(16, 2), restitution: 1d);
+        RigidBody floor = RigidBody.CreateStaticBody(Collider.CreateRectangleCollider(new Vector(28, 1)), position: new Vector(16, 22), restitution: 1d);
+        RigidBody wallLeft = RigidBody.CreateStaticBody(Collider.CreateRectangleCollider(new Vector(1, 20)), position: new Vector(2, 12), restitution: 1d);
+        RigidBody wallRight = RigidBody.CreateStaticBody(Collider.CreateRectangleCollider(new Vector(1, 20)), position: new Vector(30, 12), restitution: 1d);
+        RigidBody roof = RigidBody.CreateStaticBody(Collider.CreateRectangleCollider(new Vector(28, 1)), position: new Vector(16, 2), restitution: 1d);
 
         Random rand = new Random();
         
@@ -25,12 +25,12 @@ public class StressSetup
             if (r == 0)
             {
                 double radius = 0.4d + rand.NextDouble() * 0.6d;
-                Rigidbody.CreateRigidbody(Collider.CreateCircleCollider(radius), position: pos, initialVelocity: initialVel, restitution: 1d);
+                RigidBody.CreateRigidBody(Collider.CreateCircleCollider(radius), position: pos, initialVelocity: initialVel, restitution: 1d);
             }
             else if (r == 1)
             {
                 Vector size = new Vector(0.5d + rand.NextDouble(), 0.5d + rand.NextDouble());
-                Rigidbody.CreateRigidbody(Collider.CreateRectangleCollider(size), position: pos, initialVelocity: initialVel, restitution: 1d);
+                RigidBody.CreateRigidBody(Collider.CreateRectangleCollider(size), position: pos, initialVelocity: initialVel, restitution: 1d);
             }
         }
     }

@@ -1,4 +1,6 @@
 ﻿using MotusPhysics.Core.Utility;
+using SFML.Graphics;
+using SFML.System;
 
 namespace MotusPhysics.Visualizer;
 
@@ -23,13 +25,28 @@ public static class MotusVisualizer
     /// </summary>
     public static int PixelsPerMeter = 25;
 
-    public static bool ShowPhysicsStepCalculationTime = true;
+    public static bool ShowPhysicsStepCalculationTime = false;
     public static bool ShowCollisionShapes = true;
     public static bool ShowBoundingBoxes = false;
-    public static bool ShowRigidbodyOrigins = true;
+    public static bool ShowRigidbodyOrigins = false;
     public static bool ShowEdgeNormals = false;
-    public static bool ShowCollisionContactPoints = true;
+    public static bool ShowCollisionContactPoints = false;
     
+    private static Thread? _visualizationThread = null;
+    private static VisualizationRunner runner;
+
+
+    internal static void StartVisualizer()
+    {
+        runner = new VisualizationRunner();
+        _visualizationThread = new Thread(runner.RunVisualization);
+        _visualizationThread.Start();
+    }
+
+    public static void Shutdown()
+    { 
+        runner.Shutdown = true;
+    }
     
     /// <summary>
     /// Returns whether the visualizer is actively running, or if the thread has finished.
@@ -37,7 +54,9 @@ public static class MotusVisualizer
     /// <returns></returns>
     public static bool IsVisualizerActive()
     {
-        return VisualizerModule.IsVisualizationActive();
+        if (_visualizationThread == null)
+            return false;
+        return _visualizationThread.IsAlive;
     }
 
     /// <summary>

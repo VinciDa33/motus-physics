@@ -6,9 +6,6 @@ namespace MotusPhysics.Visualizer;
 
 internal class VisualizerModule : IMotusModule
 {
-    private static Thread? _visualizationThread = null;
-    private VisualizationRunner runner;
-    
     public void Initialize()
     {
         Motus.Logger.Log("Visualizer module initialized!");
@@ -24,10 +21,7 @@ internal class VisualizerModule : IMotusModule
         ResourceLoader.LoadSFML();
 
         //Start the visualization thread
-        runner = new VisualizationRunner();
-        _visualizationThread = new Thread(runner.RunVisualization);
-        _visualizationThread.Start();
-        
+        MotusVisualizer.StartVisualizer();
     }
 
     public void Update()
@@ -37,13 +31,6 @@ internal class VisualizerModule : IMotusModule
 
     public void Shutdown()
     {
-        runner.Shutdown = true;
-    }
-
-    internal static bool IsVisualizationActive()
-    {
-        if (_visualizationThread == null)
-            return false;
-        return _visualizationThread.IsAlive;
+        MotusVisualizer.Shutdown();
     }
 }
