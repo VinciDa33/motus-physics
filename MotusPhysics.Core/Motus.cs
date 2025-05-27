@@ -9,7 +9,7 @@ public static class Motus
 {
     public static bool IsInitialized { get; private set; } = false;
     private static string _modulePath = ".";
-    private static Thread _physicsThread;
+    private static Thread? _physicsThread;
     private static bool _loadModules = true;
     private static bool _shutdown = false;
     private static int _physicsStepsPerSecond = 50;
@@ -135,7 +135,7 @@ public static class Motus
     /// </summary>
     public static void Shutdown()
     {
-        if (!_physicsThread.IsAlive)
+        if (_physicsThread == null || !_physicsThread.IsAlive)
         {
             Logger.LogWarning("Cannot abort physics thread. It is already not running!");
             return;

@@ -19,7 +19,7 @@ class Program
         //Motus.Time.TimeScale = 1d;
         //MotusVisualizer.ShowBoundingBoxes = true;
         MotusVisualizer.ShowCollisionContactPoints = false;
-        MotusVisualizer.ShowRigidbodyOrigins = false;
+        MotusVisualizer.ShowRigidBodyOrigins = false;
         //MotusVisualizer.ShowEdgeNormals = true;
         MotusVisualizer.ShowPhysicsStepCalculationTime = false;
         
@@ -38,7 +38,7 @@ class Program
             if (Motus.Time.SimStep >= nextStep)
             {
                 Ray ray = new Ray(new Vector(10, 8), (Vector)toCast.Clone());
-                MotusRaycast.CastAll(ray, out RayCastHit[] hits);
+                MotusRayCast.CastAll(ray, out RayCastHit[] hits);
                 
                 Collider c = Collider.CreateCircleCollider(0.1d);
                 c.SetRayCastTarget(false);

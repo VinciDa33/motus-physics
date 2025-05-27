@@ -68,7 +68,7 @@ internal class VisualizationRunner
             GenerateCollisionShapes(rigidbodies);
         if (MotusVisualizer.ShowBoundingBoxes)
             GenerateAABBShapes(rigidbodies);
-        if (MotusVisualizer.ShowRigidbodyOrigins)
+        if (MotusVisualizer.ShowRigidBodyOrigins)
             GeneratePhysicsOrigins(rigidbodies);
         if (MotusVisualizer.ShowEdgeNormals)
             GenerateNormals(rigidbodies);

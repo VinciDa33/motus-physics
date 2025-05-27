@@ -23,43 +23,50 @@ public class PhysicsManager
     private PhysicsManager() {}
     
     
-    private int _rigidbodyIdTracker = 0;
-    private readonly List<RigidBody> _rigidbodies = new List<RigidBody>();
+    private int _rigidBodyIdTracker = 0;
+    private readonly List<RigidBody> _rigidBodies = new List<RigidBody>();
     //Buffers
-    private readonly List<RigidBody> _newRigidbodiesBuffer = new List<RigidBody>();
-    private readonly List<RigidBody> _removeRigidbodiesBuffer = new List<RigidBody>();
+    private readonly List<RigidBody> _newRigidBodiesBuffer = new List<RigidBody>();
+    private readonly List<RigidBody> _removeRigidBodiesBuffer = new List<RigidBody>();
     
     public List<CollisionManifold> Manifolds { get; private set; } = new List<CollisionManifold>();
     private bool _clearSimulation = false;
+
+    public Vector DefaultGravity { get; private set; } = new Vector(0, 0);
     
     /// <summary>
     /// Schedule a rigidBody to be added into the system.
     /// The actual addition will occur on the following physics step.
     /// </summary>
     /// <param name="rigidBody"></param>
-    internal void AddRigidbody(RigidBody rigidBody)
+    internal void AddRigidBody(RigidBody rigidBody)
     {
-        _newRigidbodiesBuffer.Add(rigidBody);
+        _newRigidBodiesBuffer.Add(rigidBody);
     }
     /// <summary>
     ///  Schedule a rigidBody to be removed from the system.
     /// The actual removal will occur on the following physics step.
     /// </summary>
     /// <param name="rigidBody"></param>
-    internal void RemoveRigidbody(RigidBody rigidBody)
+    internal void RemoveRigidBody(RigidBody rigidBody)
     {
-        _removeRigidbodiesBuffer.Add(rigidBody);
+        _removeRigidBodiesBuffer.Add(rigidBody);
     }
     
     public List<RigidBody> GetRigidbodies()
     {
-        return new List<RigidBody>(_rigidbodies);
+        return new List<RigidBody>(_rigidBodies);
+    }
+
+    public void SetDefaultGravity(Vector gravity)
+    {
+        DefaultGravity = gravity;
     }
     
-    internal int GetUniqueRigidbodyId()
+    internal int GetUniqueRigidBodyId()
     {
         //Return an id and post-increment the id tracker
-        return _rigidbodyIdTracker++;
+        return _rigidBodyIdTracker++;
     }
 
     internal void Update()
@@ -68,7 +75,7 @@ public class PhysicsManager
         HandleBuffers();
         
         //Update all active rigidbodies
-        foreach (RigidBody rigidbody in _rigidbodies)
+        foreach (RigidBody rigidbody in _rigidBodies)
         {
             if (!rigidbody.IsActive)
                 continue;
@@ -76,7 +83,7 @@ public class PhysicsManager
         }
         
         //Obtain all collision events to be handled through SAT collision detection
-        CollisionEvent[] collisionEvents = SATCollisionDetector.CheckCollision(_rigidbodies);
+        CollisionEvent[] collisionEvents = SATCollisionDetector.CheckCollision(_rigidBodies);
         
         //Separate out overlapping colliders using the data gained using SAT
         CollisionSeparator.SeparateCollisionBodies(collisionEvents);
@@ -102,24 +109,24 @@ public class PhysicsManager
         //Clear out the simulation if the clear flag has been set
         if (_clearSimulation)
         {
-            _rigidbodies.Clear();
-            _newRigidbodiesBuffer.Clear();
-            _removeRigidbodiesBuffer.Clear();
+            _rigidBodies.Clear();
+            _newRigidBodiesBuffer.Clear();
+            _removeRigidBodiesBuffer.Clear();
             _clearSimulation = false;
         }
     }
 
     private void HandleBuffers()
     {
-        List<RigidBody> newRigidbodies = new List<RigidBody>(_newRigidbodiesBuffer);
-        List<RigidBody> removeRigidbodies = new List<RigidBody>(_removeRigidbodiesBuffer);
+        List<RigidBody> newRigidbodies = new List<RigidBody>(_newRigidBodiesBuffer);
+        List<RigidBody> removeRigidbodies = new List<RigidBody>(_removeRigidBodiesBuffer);
         
-        _rigidbodies.AddRange(newRigidbodies);
-        _rigidbodies.RemoveRange(removeRigidbodies);
+        _rigidBodies.AddRange(newRigidbodies);
+        _rigidBodies.RemoveRange(removeRigidbodies);
         
         //Remove objects that have been handled from the buffers
-        _newRigidbodiesBuffer.RemoveRange(newRigidbodies);
-        _removeRigidbodiesBuffer.RemoveRange(removeRigidbodies);
+        _newRigidBodiesBuffer.RemoveRange(newRigidbodies);
+        _removeRigidBodiesBuffer.RemoveRange(removeRigidbodies);
     }
 
     public void ClearSimulation()

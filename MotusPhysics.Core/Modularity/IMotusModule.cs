@@ -6,6 +6,5 @@ public interface IMotusModule
 {
     public void Initialize();
     public void Update();
-
     public void Shutdown();
 }

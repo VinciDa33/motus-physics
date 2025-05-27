@@ -40,23 +40,28 @@ public sealed class ModuleManager
             return;
         }
 
+        //Get files with suffix .dll
         string[] moduleFiles = Directory.GetFiles(path, "*.dll");
         
-        //Iterate through each file in the modules folder
+        //Iterate through all found .dll files
         foreach (string module in moduleFiles)
         {
+            //Load the assembly
             Assembly assembly = Assembly.LoadFrom(module);
             Motus.Logger.Log("Checking module: " +  assembly.GetName());
             
+            //Get all types within the loaded assembly
             Type[] types = assembly.GetTypes();
 
-            //Iterate over classes and interfaces defined by the module
+            //Iterate over types defined by the module
             foreach (Type type in types)
             {
-                //Check if type is a Motus module and that it is a concrete implementation
+                //Check if type is a Motus module and if it is a concrete implementation
                 if (typeof(IMotusModule).IsAssignableFrom(type) && !type.IsInterface && !type.IsAbstract)
                 {
                     Motus.Logger.Log("...Loading type: " + type.Name);
+                    
+                    //Dynamic instantiation using the Activator
                     object? instance = Activator.CreateInstance(type);
                     
                     //Skip types that result in a null
@@ -66,6 +71,7 @@ public sealed class ModuleManager
                         continue;
                     }
 
+                    //Cast type to IMotusModule
                     IMotusModule moduleInstance = (IMotusModule)instance;
                     _motusModules.Add(moduleInstance);
                 }

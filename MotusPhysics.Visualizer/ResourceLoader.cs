@@ -65,7 +65,7 @@ internal static class ResourceLoader
     }
     
     
-    
+     
     
     private static bool _isDependenciesLoaded = false;
     internal static void LoadSFML()

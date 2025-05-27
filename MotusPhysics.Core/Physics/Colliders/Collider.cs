@@ -7,14 +7,14 @@ public abstract class Collider
     public bool IsEnabled { get; private set; } = true;
     public bool IsTrigger { get; private set; } = false;
     public bool IsRayCastTarget { get; private set; } = true;
-    public RigidBody? Rigidbody { get; private set; }
-    public Vector Position => Rigidbody == null ? Vector.Zero : Rigidbody.Position;
+    public RigidBody? RigidBody { get; private set; }
+    public Vector Position => RigidBody == null ? Vector.Zero : RigidBody.Position;
     public AABB AxisAlignedBoundingBox { get; protected set; }
     public Vector[] Normals { get; protected set; } = [];
     
-    public void SetRigidbody(RigidBody rigidBody)
+    public void SetRigidBody(RigidBody rigidBody)
     {
-        Rigidbody = rigidBody;
+        RigidBody = rigidBody;
         CalculateAABB();
         CalculateNormals();
     }

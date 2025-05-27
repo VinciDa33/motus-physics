@@ -1,6 +1,4 @@
 ﻿using MotusPhysics.Core.Utility;
-using SFML.Graphics;
-using SFML.System;
 
 namespace MotusPhysics.Visualizer;
 
@@ -28,24 +26,23 @@ public static class MotusVisualizer
     public static bool ShowPhysicsStepCalculationTime = false;
     public static bool ShowCollisionShapes = true;
     public static bool ShowBoundingBoxes = false;
-    public static bool ShowRigidbodyOrigins = false;
+    public static bool ShowRigidBodyOrigins = false;
     public static bool ShowEdgeNormals = false;
     public static bool ShowCollisionContactPoints = false;
     
     private static Thread? _visualizationThread = null;
-    private static VisualizationRunner runner;
+    private static VisualizationRunner _runner = new VisualizationRunner();
 
 
     internal static void StartVisualizer()
     {
-        runner = new VisualizationRunner();
-        _visualizationThread = new Thread(runner.RunVisualization);
+        _visualizationThread = new Thread(_runner.RunVisualization);
         _visualizationThread.Start();
     }
 
     public static void Shutdown()
     { 
-        runner.Shutdown = true;
+        _runner.Shutdown = true;
     }
     
     /// <summary>

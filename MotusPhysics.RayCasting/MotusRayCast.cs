@@ -4,7 +4,7 @@ using MotusPhysics.Core.Utility;
 
 namespace MotusPhysics.RayCasting;
 
-public static class MotusRaycast
+public static class MotusRayCast
 {
     
     /// <summary>
@@ -87,7 +87,7 @@ public static class MotusRaycast
 
                 Vector edge = edgePointB - edgePointA;
                 
-                hitsList.Add(new RayCastHit(pc.Rigidbody, point, edge.Normal()));
+                hitsList.Add(new RayCastHit(pc.RigidBody, point, edge.Normal()));
             }
         }
 
@@ -115,7 +115,7 @@ public static class MotusRaycast
         if (Math.Abs(d - cc.Radius) < 0.0001d)
         {
             hits = new RayCastHit[1];
-            hits[0] = new RayCastHit(cc.Rigidbody, point1, normal1);
+            hits[0] = new RayCastHit(cc.RigidBody, point1, normal1);
             return;
         }
 
@@ -124,7 +124,7 @@ public static class MotusRaycast
         Vector point2 = ray.Origin + u1 - m * ray.Direction;
         Vector normal2 = (point2 - cc.Position).Normalized();
         
-        hits[0] = new RayCastHit(cc.Rigidbody, point1, normal1);
-        hits[1] = new RayCastHit(cc.Rigidbody, point2, normal2);
+        hits[0] = new RayCastHit(cc.RigidBody, point1, normal1);
+        hits[1] = new RayCastHit(cc.RigidBody, point2, normal2);
     }
 }

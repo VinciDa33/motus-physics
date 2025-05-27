@@ -61,7 +61,7 @@ public class PolygonCollider : Collider
 
     internal override void UpdateRotation()
     {
-        double rotation = Rigidbody?.Rotation ?? 0d;
+        double rotation = RigidBody?.Rotation ?? 0d;
         Vector[] newVertices = new Vector[_baseVertices.Length];
         for (int i = 0; i < _baseVertices.Length; i++)
             newVertices[i] = ((Vector) _baseVertices[i].Clone()).Rotated(rotation);
