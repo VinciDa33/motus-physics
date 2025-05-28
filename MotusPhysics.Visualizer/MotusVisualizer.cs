@@ -31,11 +31,12 @@ public static class MotusVisualizer
     public static bool ShowCollisionContactPoints = false;
     
     private static Thread? _visualizationThread = null;
-    private static VisualizationRunner _runner = new VisualizationRunner();
+    private static VisualizationRunner _runner;
 
 
     internal static void StartVisualizer()
     {
+        _runner = new VisualizationRunner();
         _visualizationThread = new Thread(_runner.RunVisualization);
         _visualizationThread.Start();
     }
